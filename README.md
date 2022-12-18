@@ -23,11 +23,9 @@
 
 * Lately I wanted to organize many image files I had downloaded from the internet since many years. They are all from other photographers, most are really inspiring and can give me ideas. But there were 25K of them, and there were many duplicates!
 
-* So the first step was to get rid of these duplicates... but some were "only" near-duplicates (not exact duplicates). I tried several tools and was not very happy with the results.
+* So the first step was to get rid of these duplicates... but some were "only" near-duplicates (not exact duplicates). I tried several tools and was not very happy with the results
 
-* Once again I decided to write my own tool : image-match
-
-* I am pretty proud of this one, because:
+* Once again I decided to write my own tool : image-match. I am pretty proud of this one, because:
     * It required a lot of knowledge acquired these last years in many fields, since I published my first tool on gitHub
     * I was able to write a very EFFICIENT and FAST tool, designing a lot of opitmizations (about half the time spent on it)
 <br/>
