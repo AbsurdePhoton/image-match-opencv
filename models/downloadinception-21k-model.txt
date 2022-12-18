@@ -1,0 +1,5 @@
+Sorry you'll have to download one of the required files... It is too big to be on GitHub!
+Go to https://academictorrents.com/details/27330fbd1ec0648e72b2cf5c40aa0d4df1931221
+Download using a BitTorrent client - Extract
+Rename Inception-0009.params to Inception21k.caffemodel
+Copy this file in the /models folder along with Inception21k-bn.prototxt
