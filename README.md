@@ -21,7 +21,7 @@
 
 ## WHY?
 
-* Lately I wanted to organize many image files I had downloaded from the internet since mùany years. They are all from other photographers, most are really inspiring and can give me ideas. But there were 25K of them, and there were many duplicates!
+* Lately I wanted to organize many image files I had downloaded from the internet since many years. They are all from other photographers, most are really inspiring and can give me ideas. But there were 25K of them, and there were many duplicates!
 
 * So the first step was to get rid of these duplicates... but some were "only" near-duplicates (not exact duplicates). I tried several tools and was not very happy with the results.
 
