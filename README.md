@@ -55,7 +55,7 @@ This software should also work under Microsoft Windows, with adjustments: if you
 
 ![Screenshot - Image](screenshots/screenshot-image.jpg?raw=true)
 
-* Just click the "Add images" button: choose the folder containing the images to compare
+* Just click the "Add images" button: choose the folder containing the images to compare - many image formats are supported (15+)
 * Folders can be crawled recursively by checking the checkbox near this button
 * You can repeat this task many times, images are added only once per folder
 * You can "Clear" the images list to start a new list
