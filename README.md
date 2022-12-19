@@ -144,6 +144,15 @@ The Duplicates tab displays image matches. But how were they regrouped?
 * Select a high similarity threshold, like 50% - run it - if all goes well more matches should be found, some of them could even surprise you - it is not perfect of course but sometime it is very efficient - just play with different threshold values, results are already cached so computation will be very fast in the "Combined" mode
 * What algorithms to use together? It's easy: use "idHash" alongside others that are not very accurate by themselves like "DNN classify", "Dominant Colors", plus some using like "Features" and "Homography" - for example I often use a threshold of 35% with "DNN" + "Dominant colors" + "Homography" + "idHash"
 * How is a "combined" score computed? Each result for each pair of images for each algorithm is classified as "Exact", "Similar", Different" or "Dissimilar" - this gives a weight that can be multiplied with the initial score - the averaged sum of all algorithms scores is then calculated to give the final result. This looks almost too easy, but it definitely works!
+
+### MAYBE A TO-DO LIST
+
+* If sufficient attention is given to this program, maybe I could take the time to make it even harder, better, faster, stronger (yes this a song!)
+* make the slowest similarity algorithms run on GPU (all ?)
+* use a database instead of keeping all operations results and cache in RAM
+* with the two items above, maybe millions of images could be tested
+* maybe contact "libre" image tools like Geeqie or xnView to offer them some help with similarity matching (this Geeqie feature inspired me a lot at the beginning) 
+
 <br/>
 <br/>
 
