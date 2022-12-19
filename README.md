@@ -4,6 +4,7 @@
 
 ![Screenshot - Global](screenshots/match.jpg?raw=true)
 <br/>
+<br/>
 
 ## HISTORY
 
@@ -54,6 +55,7 @@ This software should also work under Microsoft Windows, with adjustments: if you
 ### "IMAGES" TAB
 
 ![Screenshot - Images tab](screenshots/images-tab.jpg?raw=true)
+<br/>
 
 * Just click the "Add images" button: choose the folder containing the images to compare - many image formats are supported (15+)
 * Folders can be crawled recursively by checking the checkbox near this button
@@ -66,6 +68,7 @@ This software should also work under Microsoft Windows, with adjustments: if you
 ### "DUPLICATES" TAB
 
 ![Screenshot - Duplicates tab](screenshots/duplicates-tab.jpg?raw=true)
+<br/>
 
 This is the heart of the program. Here you can look for image similarities, using several algorithms.
 
@@ -83,6 +86,7 @@ This is the heart of the program. Here you can look for image similarities, usin
 ### "OPTIONS" TAB
 
 ![Screenshot - Options tab](screenshots/options-tab.jpg?raw=true)
+<br/>
 
 Not a lot to see here, default values should work fine.
 
@@ -108,6 +112,7 @@ The Duplicates tab displays image matches. But how were they regrouped?
 ### IMAGE SIMILARITY ALGORITHMS
 
 ![Screenshot - Algorithms](screenshots/algorithms.jpg?raw=true)
+<br/>
 
 * OpenCV has a ready-to-use bunch of algorithms:
    * aHash (Average Hash): not very interesting - not used here
