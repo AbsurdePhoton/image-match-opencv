@@ -2,7 +2,7 @@
 ## A nice GUI using Qt and OpenCV to perform images similarity matching from entire folders - several algorithms - optimized to be incredibly EFFICIENT and FAST
 ### v0 - 2022-12-0618
 
-![Screenshot - Global](screenshots/screenshot-gui.jpg?raw=true)
+![Screenshot - Global](screenshots/match.jpg?raw=true)
 <br/>
 
 ## HISTORY
@@ -53,7 +53,7 @@ This software should also work under Microsoft Windows, with adjustments: if you
 
 ### "IMAGES" TAB
 
-![Screenshot - Image](screenshots/screenshot-image.jpg?raw=true)
+![Screenshot - Images tab](screenshots/images-tab.jpg?raw=true)
 
 * Just click the "Add images" button: choose the folder containing the images to compare - many image formats are supported (15+)
 * Folders can be crawled recursively by checking the checkbox near this button
@@ -65,7 +65,7 @@ This software should also work under Microsoft Windows, with adjustments: if you
 
 ### "DUPLICATES" TAB
 
-![Screenshot - Image](screenshots/screenshot-image.jpg?raw=true)
+![Screenshot - Duplicates tab](screenshots/duplicates-tab.jpg?raw=true)
 
 This is the heart of the program. Here you can look for image similarities, using several algorithms.
 
@@ -82,7 +82,7 @@ This is the heart of the program. Here you can look for image similarities, usin
 
 ### "OPTIONS" TAB
 
-![Screenshot - Image](screenshots/screenshot-image.jpg?raw=true)
+![Screenshot - Options tab](screenshots/options-tab.jpg?raw=true)
 
 Not a lot to see here, default values should work fine.
 
@@ -106,6 +106,8 @@ The Duplicates tab displays image matches. But how were they regrouped?
 * Last pass: identify the leftovers (some images were not regrouped) and decide to which group they should be attached. Constraint are less restrictive
 
 ### IMAGE SIMILARITY ALGORITHMS
+
+![Screenshot - Algorithms](screenshots/algorithms.jpg?raw=true)
 
 * OpenCV has a ready-to-use bunch of algorithms:
    * aHash (Average Hash): not very interesting - not used here
