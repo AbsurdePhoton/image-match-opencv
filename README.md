@@ -111,7 +111,7 @@ The Duplicates tab displays image matches. But how were they regrouped?
 
 ### IMAGE SIMILARITY ALGORITHMS
 
-![Screenshot - Algorithms](screenshots/algorithms.jpg?raw=true)
+![Screenshot - Homography](screenshots/homography.jpg?raw=true)
 <br/>
 
 * OpenCV has a ready-to-use bunch of algorithms:
@@ -136,6 +136,9 @@ The Duplicates tab displays image matches. But how were they regrouped?
    * with 48GB of RAM, you can test about 25K images, but it is not a good idea to do that in a unique pass (long wait). Prefer sub-groups!
 
 ### SPECIAL "COMBINED" SIMILARITY ALGORITHM
+
+![Screenshot - Algorithms](screenshots/algorithms.jpg?raw=true)
+<br/>
 
 * When you use an algorithm, it will be "activated" in the "Options" tab. If you run several algorithms on the same images set, their respective option will be activated
 * You can now COMBINE several algorithms to find even more matches between your images!
