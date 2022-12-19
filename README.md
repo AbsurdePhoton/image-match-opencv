@@ -108,8 +108,34 @@ The Duplicates tab displays image matches. But how were they regrouped?
 ### IMAGE SIMILARITY ALGORITHMS
 
 * OpenCV has a ready-to-use bunch of algorithms:
-   * aHash [Average Hash]: not very interesting
-   * pHash [Perceptual Hash]: 
+   * aHash (Average Hash): not very interesting
+   * pHash (Perceptual Hash): basic but effective and fast!
+   * Block Mean Hash: grayscale means are used
+   * Marr-Hildreth Hash: this operator is used then binarized
+   * Radial Variance Hash: this one can detect rotations to some extent
+* I added these ones:
+   * dHash (Difference Hash): a tiny 9x8 pixels version of the image is used and pixels are compared with luminosity changes
+   * idHash (Important Difference Hash): smae principle as dHash, the difference is horizontal and vertical scans are performed on a 9x9 pixels tine version of the original image
+   * Dominant Colors: the dominant color of each image (it is NOT a mean) is computed, then these values are compared using their distance in the OKLAB color space - this way images are regrouped by "global" color - not very accurate but very useful for the special similarity mode "Combined"
+   * DNN Classify: some AI is used here, and you better have a NVidia GPU, although computing with CPU is supported (much slower). Images are classified using a 21K classes reference, and then are compared using the most used percentages of the matched classes - not very accurate but useful for the special similarity mode "Combined"
+   * Features: images features are matched between the pairs, the more they have in common the more the score will be. This method is able to detect extremely rotated versions of an image - this is very SLOW and you should use it on reduced images lists (2K-3K max)
+   * Homothety: a step further from "Features", if a sufficent number of "good" matches are found, an homothety could be found - this usually means images are similar. This method can detect not-so-near duplicates, and extremely rotated versions - this is very efficient but also very SLOW, and you should use it on reduced images lists (2K-3K max)
+
+Also notice:
+* a lot of results are cached when an algorithm is used: you can recompute the same algorithm with a different threshold in a very reduced time compared to the first pass!
+* with 48GB of RAM, I can test about 25K images, but it is not a good idea to do that in a unique pass. Prefer sub-groups!
+
+### SPECIAL "COMBINED" SIMILARITY ALGORITHM
+
+* When you use an algorithm, it will be "activated" in the "Options" tab. If you run several algorithms on the same images set, their respective option will be activated
+* You can now COMBINE several algorithms to find even more matches betwwen your images!
+* To do that, in the "Options" tab check/uncheck some algoritms
+* In the "Duplicates tab, select "Combined" as the algorithm to use
+* Select a high similarity threshold, like 50% - run it - if all goes well more matches should be found, some of them could even surprise you - it is not perfect of course but sometime it is very efficient
+* What algorithms to use together? It's easy: use "idHash" alongside others that are not very accurate by themselves like "DNN classify", "Dominant Colors", plus some using features like "Features" and "Homography"
+* How is it computed? Each result for each pair of images for each algorithm is classified as "Exact", "Similar", Different" or "Dissimilar" - this gives a weight that can be multiplied with the initial score - the averaged sum of all scores is then calculated to give the final result. This looks almost too easy, but it works!
+<br/>
+<br/>
 
 ## Enjoy!
 
