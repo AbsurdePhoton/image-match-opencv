@@ -4,7 +4,7 @@
 #
 #       by AbsurdePhoton - www.absurdephoton.fr
 #
-#                   v0 - 2022/12/18
+#                   v1 - 2022/12/25
 #
 #-------------------------------------------------*/
 
@@ -122,10 +122,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->frame_group_thumbnails_size->setDisabled(false); // enable options
     ui->frame_group_reduced_size->setDisabled(false);
-
-    // test buttons
-    ui->button_test_images->setHidden(true);
-    ui->doubleSpinBox_test_images->setHidden(true);
 
     // slots : for mouse clicks on images list and duplicates list
     connect(ui->listWidget_image_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(ImagesListClick(QListWidgetItem*))); // single click on images list
@@ -636,6 +632,24 @@ void MainWindow::ImagesListClick(QListWidgetItem *item) // click on item in imag
     }
 }
 
+QString MainWindow::GetImageClass(const int &imgNumber) // get DNN class of an image if it exists
+{
+    if (dnn.empty()) { // if DNN structures not already defined
+        PrepareDNN();
+    }
+
+    if ((!images[imgNumber].deleted) and (!images[imgNumber].error)) {
+        if (images[imgNumber].hashDNN.empty())
+            images[imgNumber].hashDNN = DNNHash(images[imgNumber].imageReduced, dnn, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
+        std::string classTxt = classes[images[imgNumber].hashDNN.at<int>(0, 0)];
+        std::string percentageTxt = std::to_string(images[imgNumber].hashDNN.at<int>(1, 0));
+        std::string retTxt = " [ " + classTxt + " " + percentageTxt + "% ]";
+        return QString::fromStdString(retTxt);
+    }
+
+    return "";
+}
+
 void MainWindow::ImagesListDoubleClick(QListWidgetItem *item) // double-click on item of images list -> show image in new window
 {
     int imgNumber = item->data(Qt::UserRole).toInt(); // get image number in internal images list
@@ -653,7 +667,7 @@ void MainWindow::ImagesListDoubleClick(QListWidgetItem *item) // double-click on
 
     QLabel *label_img = new QLabel (this); // new label widget
     label_img->setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint); // the new window stays on top, this way we can open several
-    label_img->setWindowTitle(QString::number(width) + "x" + QString::number(height) + " - " + QString::fromStdString(images[imgNumber].basename)); // window title with image info
+    label_img->setWindowTitle(QString::number(width) + "x" + QString::number(height) + " - " + QString::fromStdString(images[imgNumber].basename) + GetImageClass(imgNumber)); // window title with image info
     label_img->setGeometry((screenSize.width() - pix.width()) / 2, (screenSize.height() - pix.height()) / 2, pix.width(), pix.height()); // set window size + position=centered
     label_img->setPixmap(pix); // add the image to widget
     label_img->show(); // show the new window
@@ -717,12 +731,70 @@ void MainWindow::on_button_images_check_text_clicked() // button pressed -> find
 
     for(int n = 0; n < ui->listWidget_image_list->count(); n++) { // parse all widget items
         QListWidgetItem* item = ui->listWidget_image_list->item(n); // current item
-        if (item->text().contains(ui->lineEdit_images_check_text->text(), Qt::CaseInsensitive)) // is the searched text found in this item's text ?
+        if (item->text().contains(ui->lineEdit_images_check_text->text(), Qt::CaseInsensitive)) { // is the searched text found in this item's text ?
             item->setCheckState(checkedState); // set its check state to reference check state
+            item->setSelected(true);
+        }
     }
 }
 
-// Remove and delete
+void MainWindow::on_button_images_check_text_dnn_clicked() // button pressed -> find classes with DNN and check images in images list
+{
+    Qt::CheckState checkedState = ui->checkBox_images->checkState(); // use the current reference check state near the text field
+
+    std::string toFind = ui->lineEdit_images_check_text_dnn->text().toStdString();
+    if (toFind.empty())
+        return;
+
+    //// progress
+    int progress = 0; // overall progression
+    int count = 0; // for gui refresh
+    int countLimit = 10;
+    int sum = ui->listWidget_image_list->count(); // number of images to check
+    ShowProgress(progress_prepare);
+    ShowProgress(progress_run, "Searching images context", 0, sum);
+    ShowProgress(progress_update, "", 0);
+
+    if (dnn.empty()) { // if DNN structures not already defined
+        PrepareDNN();
+    }
+
+    for (int n = 0; n < ui->listWidget_image_list->count(); n++) { // parse all widget items
+        QListWidgetItem* item = ui->listWidget_image_list->item(n); // current item
+        int nbImage = item->data(Qt::UserRole).toInt();
+
+        if ((!images[nbImage].error) and (!images[nbImage].deleted)) {
+            if (images[nbImage].hashDNN.empty())  // if classes are not already computed
+                images[nbImage].hashDNN = DNNHash(images[nbImage].imageReduced, dnn, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
+
+            for (int current = 0; current < images[nbImage].hashDNN.cols; current++) {
+                if (images[nbImage].hashDNN.at<int>(1, current) > 5) {
+                    std::string text = classes[images[nbImage].hashDNN.at<int>(0, current)];
+                    std::size_t pos = text.find(toFind);
+                    if (pos != std::string::npos) { // text found ?
+                        item->setCheckState(checkedState); // set its check state to reference check state
+                        item->setSelected(true);
+                        break;
+                    }
+                }
+            }
+        }
+
+        progress++; // one more search done !
+        count++; // counter
+        if (count > countLimit) { // enough images were searched ? time to update the progress bar
+            ShowProgress(progress_update, "", progress); // update progress bar with new value
+            count = 0; // reset counter
+        }
+        if (stop) {
+            break;
+        }
+    }
+
+    ShowProgress(progress_finished, "Images context search finished"); // end the current progress (that hides the animated wainting icon and restores the mouse cursor
+}
+
+// Remove and delete and move
 
 void MainWindow::RemoveImageFromListImages(QListWidgetItem *item) // remove one item from image list by its pointer
 {
@@ -824,6 +896,81 @@ void MainWindow::on_button_images_delete_clicked() // butoon pressed -> delete i
     }
 }
 
+void MainWindow::on_button_images_move_clicked() // button pressed -> move files of checked images in images list to another folder
+{
+    QString dir = QFileDialog::getExistingDirectory(this, "Move images...", QString::fromStdString(basedir), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    if (dir.isNull() || dir.isEmpty()) // cancel ?
+        return;
+
+    dir += "/";
+    std::string folder = dir.toUtf8().constData();
+
+    // progress
+    ShowProgress(progress_prepare);
+    ShowProgress(progress_run, "Moving image files", 0, 1);
+    ShowProgress(progress_update, 0);
+
+    QString errors = "";
+    bool moveConfirm = false;
+    bool moved = false; // indicate that at least one file was moved
+    for (int i = 0; i < ui->listWidget_image_list->count(); i++) {
+        QListWidgetItem *item = ui->listWidget_image_list->item(i);
+        bool confirmThisTime = moveConfirm;
+        if (item->checkState() == Qt::Checked) {
+            int imgNumber = item->data(Qt::UserRole).toInt();
+
+            std::string newFilename = folder + images[imgNumber].basename;
+            std::ifstream inFile(newFilename);
+            if (inFile.good()) { // that means file already exists
+                if (!confirmThisTime) {
+                    int confirm = QMessageBox::question(this, "Moving file image...", "Are you sure you want to move the file image?\n" + QString::fromStdString(images[imgNumber].fullPath), QMessageBox::Yes|QMessageBox::No|QMessageBox::YesToAll); // move, are you sure ?
+                    if (confirm == QMessageBox::YesToAll) {
+                        moveConfirm = true;
+                    }
+                    else if (confirm == QMessageBox::Yes) {
+                        confirmThisTime = true;
+                    }
+                }
+            }
+            else {
+                confirmThisTime = true;
+            }
+
+            if ((moveConfirm) or (confirmThisTime)) {
+                if (std::rename(images[imgNumber].fullPath.c_str(), newFilename.c_str()) != 0) { // error moving image file ?
+                    errors += QString::fromStdString(images[imgNumber].fullPath) + "\n"; // add entry to errors log
+                }
+                else { // file image was moved successfully : update image data (internal and images list and duplicates)
+                    moved = true; // at least one file was moved
+                    images[imgNumber].fullPath = newFilename; // change full path in internal images list
+                    images[imgNumber].folder = folder; // change folder in internal images list
+                    item->setToolTip(QString::fromStdString(newFilename)); // change tooltip in images list
+
+                    for (int n = 0; n < int(images.size()); n++) { // check for duplicates in internal images list with new filename
+                        if ((n != imgNumber) and (images[n].fullPath == newFilename)) { // don't test current image itself ! is the filename the same ?
+                            images[n].deleted = true; // delete it, it's a duplicate !
+                            RemoveImageFromListImages(images[n].imageItem); // remove image from displayed images list
+                            break; // duplicate found, no need to test the other children
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (moved) { // at least one file was moved
+        ShowImagesListCount();
+        ClearDuplicates();
+    }
+
+    ShowProgress(progress_finished, "Image files moved");
+
+    if (errors != "") {
+        QMessageBox::warning(this, "Errors moving image files", "Some images files could not be moved.\nHere is the list of images that failed:\n\n" + errors);
+    }
+}
+
 //// Options
 
 void MainWindow::on_spinBox_thumbnails_size_valueChanged(int size) // change thumbnails size
@@ -861,6 +1008,11 @@ void MainWindow::on_doubleSpinBox_threshold_valueChanged(double nb) // change th
 
 void MainWindow::ClearDuplicates() // clear duplicates list and associated GUI elements and variables + show duplicates count
 {
+    for (int n = 0; n < int(images.size()); n++) {
+        images[n].keypoints.clear();
+        images[n].descriptors = cv::Mat();
+    }
+
     // variables
     pairs.clear(); // clear images pairs scores
     groups.clear(); // clear images groups list
@@ -868,9 +1020,9 @@ void MainWindow::ClearDuplicates() // clear duplicates list and associated GUI e
     // duplicates list
     ui->treeWidget_duplicates->clear(); // no images shown in duplicates list
 
-    // enable all options in options tab
-    ui->frame_group_thumbnails_size->setDisabled(false);
-    ui->frame_group_reduced_size->setDisabled(false);
+    // options in options tab
+    ui->frame_group_thumbnails_size->setDisabled(true);
+    ui->frame_group_reduced_size->setDisabled(true);
     ui->frame_group_nb_features->setDisabled(false);
 
     // disable algorithms in ui
@@ -887,6 +1039,11 @@ void MainWindow::ClearDuplicates() // clear duplicates list and associated GUI e
 void MainWindow::on_button_compare_images_clicked() // compare images from images list
 {
     CompareImages(); // the most important function in this program !
+}
+
+void MainWindow::on_button_duplicates_clear_clicked() // button pressed -> clear duplicates list
+{
+    ClearDuplicates(); // clear duplicates list and enable gui items and clear some variables too
 }
 
 // Check
@@ -1266,7 +1423,7 @@ void MainWindow::DuplicatesListDoubleClick(QTreeWidgetItem *item, int column) //
         QLabel *label_img = new QLabel (this); // as seen before in other functions, show image in a stay-on-top window
         //label_img->setWindowModality(Qt::WindowModal);
         label_img->setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
-        label_img->setWindowTitle(QString::number(width) + "x" + QString::number(height) + " - " + QString::fromStdString(images[imgNumber].basename));
+        label_img->setWindowTitle(QString::number(width) + "x" + QString::number(height) + " - " + QString::fromStdString(images[imgNumber].basename) + GetImageClass(imgNumber));
         label_img->setGeometry((screenSize.width() - pix.width()) / 2, (screenSize.height() - pix.height()) / 2, pix.width(), pix.height());
         label_img->setPixmap(pix);
         label_img->show();
@@ -1897,6 +2054,17 @@ std::string MainWindow::GetHashString(const int &imageNumber, const imageSimilar
     return "";
 }
 
+void MainWindow::PrepareDNN() // prepare DNN and classes structures
+{
+    DNNPrepare(dnn, "models/Inception21k.caffemodel", "models/Inception21k-bn.prototxt"); // prepare DNN model Unception 21K
+    classes.reserve(21850);
+    std::ifstream file("models/imagenet-21k-classes.csv");
+    std::string str;
+    while (std::getline(file, str)) {
+        classes.push_back(stringutils::ToLower(str));
+    }
+}
+
 void MainWindow::CompareImages() // compare images in images list
 {
     //// image list empty ?
@@ -1938,7 +2106,7 @@ void MainWindow::CompareImages() // compare images in images list
 
     //// DNN initialization
     if ((similarityAlgorithm == img_similarity_dnn_classify) and (dnn.empty())) { // if DNN algorithm and not already defined
-        DNNPrepare(dnn, "models/Inception21k.caffemodel", "models/Inception21k-bn.prototxt"); // prepare DNN model Unception 21K
+        PrepareDNN();
     }
 
     //// find duplicates in images list
@@ -2421,111 +2589,6 @@ bool MainWindow::ReadThresholdsConfig() // read thresholds from config file, ret
     } // end reading a line in config file
 
     return true;
-}
-
-void MainWindow::on_button_test_images_clicked()
-{
-    QPixmap q1, q2;
-    cv::Mat im1, im2;
-
-    for (int n = 0; n < ui->listWidget_image_list->count(); n++) {
-        QListWidgetItem* item = ui->listWidget_image_list->item(n);
-        if (item->checkState() == Qt::Checked) {
-            int ref = item->data(Qt::UserRole).toInt();
-
-            if (q1.isNull()) {
-                q1 = LoadImagePix(images[ref].fullPath, images[ref].loadwith);
-            }
-            else if (q2.isNull()) {
-                q2 = LoadImagePix(images[ref].fullPath, images[ref].loadwith);
-                break;
-            }
-        }
-    }
-
-    if (q1.isNull())
-        return;
-
-    im1 = QPixmap2Mat(q1);
-    if (!q2.isNull())
-        im2 = QPixmap2Mat(q2);
-
-    // code using im1 and im2 here
-    /*//// NSFW test
-    cv::dnn::Net dnn;
-    dnn.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-    dnn.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
-    dnn = cv::dnn::readNetFromCaffe("models/nsfw/nsfw.prototxt", "models/nsfw/nsfw.caffemodel");
-
-    im1.convertTo(im1, CV_32FC3);
-    cv::Mat blob = cv::dnn::blobFromImage(im1, 1.0, cv::Size(224, 224), cv::Scalar(104, 117, 123), false, false, CV_32F); // create blob imput - NSFW
-    //cv::Mat blob = cv::dnn::blobFromImage(im1, 1.0, cv::Size(227, 227), cv::Scalar(112.005, 120.294, 138.682), false, false, CV_32F); // create blob imput - NSFW SqueezeNet
-
-    // convolution -> return output
-    cv::Mat output;
-    dnn.setInput(blob);
-    output =  dnn.forward("");
-
-    output = output.reshape(1, 1);
-
-    ui->doubleSpinBox_test->setValue(output.at<float>(1));*/
-
-    std::vector<std::string> classes;
-    classes.reserve(21850);
-    std::ifstream file("models/imagenet-21k-classes.csv");
-    std::string str;
-    while (std::getline(file, str))
-        classes.push_back(str);
-
-    cv::dnn::Net dnn;
-    dnn.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-    dnn.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
-    dnn = cv::dnn::readNetFromCaffe("models/Inception21k-bn.prototxt", "models/Inception21k.caffemodel");
-
-    im1.convertTo(im1, CV_32FC3);
-    cv::Mat blob = cv::dnn::blobFromImage(im1, 1.0, cv::Size(224, 224), cv::Scalar(117, 117, 117), false, false, CV_32F); // create blob imput
-
-    cv::Mat output;
-    dnn.setInput(blob);
-    output =  dnn.forward("");
-
-    output = output.reshape(1, 1);
-
-    int nbValues = 16;
-    cv::Mat result = cv::Mat::zeros(2, nbValues, CV_32F);
-    for (int n = 0; n < nbValues; n++) {
-        cv::Point classIdPoint;
-        double confidence;
-        cv::minMaxLoc(output, 0, &confidence, 0, &classIdPoint);
-        int classId = classIdPoint.x;
-        result.at<float>(0, n) = classId;
-        result.at<float>(1, n) = confidence;
-        output.at<float>(classId) = 0;
-    }
-
-    qDebug() << "-----------------------------------------------------";
-    for (int n = 0; n < nbValues; n++)
-        qDebug() << QString::fromStdString(classes[int(result.at<float>(0, n))]) << " " << result.at<float>(1, n) * 100.0f << "%";
-
-
-    /*// show window with image
-    if (!homography.empty()) {
-        QPixmap pix = Mat2QPixmap(homography);
-        int width = pix.width();
-        int height = pix.height();
-        if ((width > 1000) or (height > 1000))
-            pix = pix.scaled(1000, 1000, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-        QSize screenSize = qApp->screens()[0]->size();
-
-        QLabel *label_img = new QLabel (this);
-        //label_img->setWindowModality(Qt::WindowModal);
-        label_img->setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint);
-        label_img->setWindowTitle(QString::number(width) + "x" + QString::number(height) + " - ");
-        label_img->setGeometry((screenSize.width() - pix.width()) / 2, (screenSize.height() - pix.height()) / 2, pix.width(), pix.height());
-        label_img->setPixmap(pix);
-        label_img->show();
-    }*/
 }
 
 void MainWindow::on_button_examine_clicked() // set as a test at the beginning, this function is useful to estimate the real visual similarity between two images

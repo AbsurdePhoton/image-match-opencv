@@ -160,7 +160,8 @@ QToolTip {
       <string/>
      </property>
      <property name="whatsThis">
-      <string>v0 - first version, but already full of image matching algorithms!</string>
+      <string>v1 - Added DNN classes in image detais + search in images lists
+v0 - first version, but already full of image matching algorithms!</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background: white;</string>
@@ -172,7 +173,7 @@ QToolTip {
       <enum>QFrame::Sunken</enum>
      </property>
      <property name="text">
-      <string>v0</string>
+      <string>v1</string>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -710,7 +711,7 @@ height: 20px;
      <widget class="QPushButton" name="button_images_hide">
       <property name="geometry">
        <rect>
-        <x>1334</x>
+        <x>1224</x>
         <y>826</y>
         <width>101</width>
         <height>61</height>
@@ -792,7 +793,7 @@ QToolTip {
      <widget class="QPushButton" name="button_images_uncheck_all">
       <property name="geometry">
        <rect>
-        <x>730</x>
+        <x>582</x>
         <y>826</y>
         <width>61</width>
         <height>61</height>
@@ -851,7 +852,7 @@ QToolTip {
      <widget class="QPushButton" name="button_images_check_invert">
       <property name="geometry">
        <rect>
-        <x>960</x>
+        <x>812</x>
         <y>826</y>
         <width>61</width>
         <height>61</height>
@@ -910,7 +911,7 @@ QToolTip {
      <widget class="QPushButton" name="button_images_check_all">
       <property name="geometry">
        <rect>
-        <x>664</x>
+        <x>516</x>
         <y>826</y>
         <width>61</width>
         <height>61</height>
@@ -969,8 +970,8 @@ QToolTip {
      <widget class="QLineEdit" name="lineEdit_images_check_text">
       <property name="geometry">
        <rect>
-        <x>1078</x>
-        <y>843</y>
+        <x>938</x>
+        <y>829</y>
         <width>111</width>
         <height>27</height>
        </rect>
@@ -988,8 +989,8 @@ Tip: searching in the full image path enables you to check/uncheck all the image
      <widget class="QPushButton" name="button_images_check_text">
       <property name="geometry">
        <rect>
-        <x>1200</x>
-        <y>844</y>
+        <x>1060</x>
+        <y>830</y>
         <width>61</width>
         <height>27</height>
        </rect>
@@ -1106,70 +1107,11 @@ QToolTip {
        </size>
       </property>
      </widget>
-     <widget class="QPushButton" name="button_test_images">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>826</y>
-        <width>71</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>11</pointsize>
-       </font>
-      </property>
-      <property name="cursor">
-       <cursorShape>PointingHandCursor</cursorShape>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="toolTip">
-       <string/>
-      </property>
-      <property name="whatsThis">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load the image to quantize and analyze&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #FFFFFF, stop: 1 #E0E0E0);
-	border-radius: 10px;
-	border: 2px outset #8f8f91;
-	color rgb(0,0,0);
-}
-QPushButton:pressed {
-	border: 2px inset #8f8f91;
-}
-QToolTip {
-    border:2px solid black;
-	padding:5px;
-	background-color:rgb(64,64,64);
-	color:white;
-	font-size: 14px;
-}</string>
-      </property>
-      <property name="text">
-       <string> Test</string>
-      </property>
-      <property name="icon">
-       <iconset resource="resources.qrc">
-        <normaloff>:/icons/compute.png</normaloff>:/icons/compute.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>32</width>
-        <height>32</height>
-       </size>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="checkBox_images">
       <property name="geometry">
        <rect>
-        <x>1042</x>
-        <y>841</y>
+        <x>902</x>
+        <y>827</y>
         <width>31</width>
         <height>31</height>
        </rect>
@@ -1316,7 +1258,7 @@ QToolTip {
      <widget class="QPushButton" name="button_images_check_all_selected">
       <property name="geometry">
        <rect>
-        <x>812</x>
+        <x>664</x>
         <y>826</y>
         <width>61</width>
         <height>61</height>
@@ -1375,7 +1317,7 @@ QToolTip {
      <widget class="QPushButton" name="button_images_uncheck_all_selected">
       <property name="geometry">
        <rect>
-        <x>876</x>
+        <x>728</x>
         <y>826</y>
         <width>61</width>
         <height>61</height>
@@ -1434,7 +1376,7 @@ QToolTip {
      <widget class="QPushButton" name="button_images_hide_error">
       <property name="geometry">
        <rect>
-        <x>1440</x>
+        <x>1330</x>
         <y>826</y>
         <width>101</width>
         <height>61</height>
@@ -1492,291 +1434,144 @@ QToolTip {
        </size>
       </property>
      </widget>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox_test_images">
+     <widget class="QLineEdit" name="lineEdit_images_check_text_dnn">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>866</y>
-        <width>71</width>
-        <height>23</height>
+        <x>938</x>
+        <y>861</y>
+        <width>111</width>
+        <height>27</height>
        </rect>
       </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="ButtonText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Highlight">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>135</red>
-            <green>167</green>
-            <blue>82</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="PlaceholderText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="ButtonText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Highlight">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>135</red>
-            <green>167</green>
-            <blue>82</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="PlaceholderText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Button">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="ButtonText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Base">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Window">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>148</red>
-            <green>148</green>
-            <blue>148</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Highlight">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>167</red>
-            <green>167</green>
-            <blue>167</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="PlaceholderText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
+      <property name="whatsThis">
+       <string>Use this element to enter something to search in the images' classes found with the DNN model.
+Use the button near it to launch the search.
+Use the checkbox close to the text field to check all corresponding items, and uncheck it to uncheck all found items.
+Tip: try precise words first, then generic ones if needed</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: white;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_images_check_text_dnn">
+      <property name="geometry">
+       <rect>
+        <x>1060</x>
+        <y>862</y>
+        <width>61</width>
+        <height>27</height>
+       </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>11</pointsize>
        </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
       </property>
       <property name="whatsThis">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of wanted dominant colors in the palette&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>Use this button to use text search in DNN classes.
+It will check/uncheck all corresponding items.
+Keep in mind that an AI will never be perfect, there will sometimes be mistakes.</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">QSpinBox {
-    color: black;
-	background-color: white;
-	font-size: 12pt;
+       <string notr="true">QPushButton {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFFFFF, stop: 1 #E0E0E0);
+	border-radius: 6px;
+	border: 2px outset #8f8f91;
+	color rgb(0,0,0);
 }
-QSpinBox:disabled {
-	background-color: lightgray;
+QPushButton:pressed {
+	border: 2px inset #8f8f91;
+}
+QToolTip {
+    border:2px solid black;
+	padding:5px;
+	background-color:rgb(64,64,64);
+	color:white;
+	font-size: 14px;
 }</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>false</bool>
-      </property>
-      <property name="buttonSymbols">
-       <enum>QAbstractSpinBox::NoButtons</enum>
-      </property>
-      <property name="keyboardTracking">
-       <bool>false</bool>
-      </property>
-      <property name="suffix">
+      <property name="text">
        <string/>
       </property>
-      <property name="decimals">
-       <number>3</number>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/dnn.png</normaloff>:/icons/dnn.png</iconset>
       </property>
-      <property name="minimum">
-       <double>0.000000000000000</double>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
       </property>
-      <property name="maximum">
-       <double>1.000000000000000</double>
+     </widget>
+     <widget class="QPushButton" name="button_images_move">
+      <property name="geometry">
+       <rect>
+        <x>1454</x>
+        <y>826</y>
+        <width>101</width>
+        <height>61</height>
+       </rect>
       </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
       </property>
-      <property name="value">
-       <double>0.000000000000000</double>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string>Move all checked images to another folder.</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFFFFF, stop: 1 #E0E0E0);
+	border-radius: 10px;
+	border: 2px outset #8f8f91;
+	color rgb(0,0,0);
+}
+QPushButton:pressed {
+	border: 2px inset #8f8f91;
+}
+QToolTip {
+    border:2px solid black;
+	padding:5px;
+	background-color:rgb(64,64,64);
+	color:white;
+	font-size: 14px;
+}</string>
+      </property>
+      <property name="text">
+       <string>   Move
+    files</string>
+      </property>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/file-move.png</normaloff>:/icons/file-move.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>36</width>
+        <height>36</height>
+       </size>
       </property>
      </widget>
     </widget>
@@ -2052,7 +1847,7 @@ QToolTip {
      <widget class="QDoubleSpinBox" name="doubleSpinBox_threshold">
       <property name="geometry">
        <rect>
-        <x>390</x>
+        <x>394</x>
         <y>860</y>
         <width>121</width>
         <height>21</height>
@@ -2425,7 +2220,7 @@ QToolTip {
      <widget class="QPushButton" name="button_duplicates_check_all">
       <property name="geometry">
        <rect>
-        <x>740</x>
+        <x>760</x>
         <y>827</y>
         <width>61</width>
         <height>61</height>
@@ -2484,7 +2279,7 @@ QToolTip {
      <widget class="QPushButton" name="button_duplicates_uncheck_all">
       <property name="geometry">
        <rect>
-        <x>810</x>
+        <x>830</x>
         <y>827</y>
         <width>61</width>
         <height>61</height>
@@ -2543,7 +2338,7 @@ QToolTip {
      <widget class="QPushButton" name="button_duplicates_check_invert">
       <property name="geometry">
        <rect>
-        <x>880</x>
+        <x>900</x>
         <y>827</y>
         <width>61</width>
         <height>61</height>
@@ -2602,7 +2397,7 @@ QToolTip {
      <widget class="QPushButton" name="button_duplicates_hide">
       <property name="geometry">
        <rect>
-        <x>1230</x>
+        <x>1244</x>
         <y>827</y>
         <width>101</width>
         <height>61</height>
@@ -3059,8 +2854,8 @@ QCheckBox::indicator:checked:pressed {
      <widget class="QPushButton" name="button_duplicates_save_results">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>826</y>
+        <x>650</x>
+        <y>827</y>
         <width>61</width>
         <height>61</height>
        </rect>
@@ -3119,7 +2914,7 @@ QToolTip {
      <widget class="QComboBox" name="comboBox_level">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>384</x>
         <y>828</y>
         <width>141</width>
         <height>26</height>
@@ -3190,8 +2985,8 @@ QToolTip {
      <widget class="QPushButton" name="button_examine">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>826</y>
+        <x>650</x>
+        <y>827</y>
         <width>61</width>
         <height>61</height>
        </rect>
@@ -3307,6 +3102,66 @@ QToolTip {
        <size>
         <width>36</width>
         <height>36</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_duplicates_clear">
+      <property name="geometry">
+       <rect>
+        <x>544</x>
+        <y>827</y>
+        <width>61</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string>Clear the images list.
+It also clears the Duplicates list, and enables some elemnts in the Options tab.</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFFFFF, stop: 1 #E0E0E0);
+	border-radius: 10px;
+	border: 2px outset #8f8f91;
+	color rgb(0,0,0);
+}
+QPushButton:pressed {
+	border: 2px inset #8f8f91;
+}
+QToolTip {
+    border:2px solid black;
+	padding:5px;
+	background-color:rgb(64,64,64);
+	color:white;
+	font-size: 14px;
+}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icons/clear.png</normaloff>:/icons/clear.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
      </widget>

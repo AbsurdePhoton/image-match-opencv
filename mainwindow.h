@@ -4,7 +4,7 @@
 #
 #       by AbsurdePhoton - www.absurdephoton.fr
 #
-#                   v0 - 2022/12/18
+#                   v1 - 2022/12/25
 #
 #-------------------------------------------------*/
 
@@ -120,11 +120,13 @@ private slots:
     void on_button_images_check_all_selected_clicked(); // button pressed -> check selected images in images list
     void on_button_images_check_invert_clicked(); // button pressed -> invert check state in images list
     void on_button_images_check_text_clicked(); // button pressed -> find words and check images in images list
+    void on_button_images_check_text_dnn_clicked(); // button pressed -> find classes with DNN and check images in images list
     // Remove and delete
     void RemoveImageFromListImages(QListWidgetItem *item); // remove one item from image list by its pointer
     void on_button_images_hide_clicked(); // button pressed -> hide checked images from list
     void on_button_images_hide_error_clicked(); // button pressed -> hide images with errors from list
     void on_button_images_delete_clicked(); // button pressed -> delete images from list
+    void on_button_images_move_clicked(); // button pressed -> move files of checked images in images list to another folder
     //// Options
     void on_spinBox_thumbnails_size_valueChanged(int size); // change thumbnails size
     void on_spinBox_reduced_size_valueChanged(int size); // change working image size
@@ -135,6 +137,7 @@ private slots:
     void ClearDuplicates(); // clear duplicates list and associated GUI elements and variables + show duplicates count
     // Compute similarities
     void on_button_compare_images_clicked(); // compare images from images list
+    void on_button_duplicates_clear_clicked(); // button pressed -> clear duplicates list
     // Check
     void on_button_duplicates_uncheck_all_clicked(); // button pressed -> uncheck all duplicates in duplicates list
     void on_button_duplicates_check_all_clicked(); // button pressed -> check all duplicates in duplicates list
@@ -149,8 +152,7 @@ private slots:
     void on_button_duplicates_move_clicked(); // button pressed -> move checked items in duplicates list to another folder
     // save results
     void on_button_duplicates_save_results_clicked(); // button to save results - for debugging purpose only - deactivate it for final version
-    // Tests - deactivate them for final version
-    void on_button_test_images_clicked();
+    // Examine
     void on_button_examine_clicked(); // set as a test at the beginning, this function is useful to estimate the real visual similarity between two images
 
     //// sliders and values
@@ -247,6 +249,7 @@ private:
 
     // DNN
     cv::dnn::Net dnn; // DNN is only defined (and loaded) once
+    std::vector<std::string> classes; // classes are only defined (and loaded) once
 
     // options
     int thumbnailsSize;
@@ -290,6 +293,7 @@ private:
     void ComputeImagesListInfo(); // compute all other required info in images list
     void ShowImagesList(); // display images list from images information
     void ShowImagesListCount(); // show number of images in images list in GUI
+    QString GetImageClass(const int &imgNumber); // get DNN class of an image if it exists
     // duplicates list
     cv::Point OrderedPair(const int &i, const int &j); // returns a pair of integer (image index) - pairs must have im1 <= im2
     int GetClosestNeighbourNotUsed(const int &imageNumber, const imageSimilarityAlgorithm &algo); // get closest neighbour's imageNumber of an imageNumber from duplicates of an image
@@ -302,6 +306,7 @@ private:
     float CombinedScore(const int &i, const int &j); // get combined score for 2 images from previous tests
     bool ImagesAreDuplicates(const int &i, const int &j, const imageSimilarityAlgorithm &similarityAlgorithm, const float &threshold, float &similarity); // compare a pair of images using an algorithm
     std::string GetHashString(const int &imageNumber, const imageSimilarityAlgorithm &similarityAlgorithm); // get hash string from image hash (debug purpose only)
+    void PrepareDNN(); // prepare DNN and classes structures
     void CompareImages(); // compare images in images list
     QTreeWidgetItem* GetDuplicateItem(const int &ref); // get a prepared duplicate item for the duplicates view
     void ShowDuplicatesList(); // display alll duplicates : cluster in groups then show the list
