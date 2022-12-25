@@ -660,7 +660,7 @@ cv::Mat DNNHash(const cv::Mat &image, cv::dnn::Net &net, const int &size, const 
     }
 
     // get n "top" values, return them to matrix
-    cv::Mat result = cv::Mat::zeros(1, nbValues, CV_32S); // return matrix
+    cv::Mat result = cv::Mat::zeros(2, nbValues, CV_32S); // return matrix
     int* resultP = result.ptr<int>(0); // pointer to result
     float* outputP = output.ptr<float>(0); // pointer to DNN output
     for (int n = 0; n < nbValues; n++) { // we want a defined number of values
@@ -669,6 +669,7 @@ cv::Mat DNNHash(const cv::Mat &image, cv::dnn::Net &net, const int &size, const 
         cv::minMaxLoc(output, 0, &confidence, 0, &classIdPoint); // get max value in DNN output and its location in the matrix
         int classId = classIdPoint.x; // the class id is the position in the DNN output matrix
         resultP[n] = classId; // save it to results
+        resultP[n + nbValues] = confidence * 100.0; // with its confidence value (percentage)
         outputP[classId] = -1; // we don't want to find this resut again
     }
 
@@ -682,7 +683,7 @@ float DNNCompare(const cv::Mat &output1, const cv::Mat &output2) // compare 2 re
     int count = 0;
     for (int i = 0; i < output1.cols - sub; i++) { // parse all values from ids
         for (int j = i; j < i + sub; j++) { // parse all "sub" values
-            if ((output1.at<int>(i) != 0) and ((output1.at<int>(i) == output2.at<int>(j)))) { // if values are the same
+            if ((output1.at<int>(0, i) != 0) and ((output1.at<int>(0, i) == output2.at<int>(0, j)))) { // if values are the same
                 count ++; // +1 score !
                 break; // don't parse other sub-values
             }
