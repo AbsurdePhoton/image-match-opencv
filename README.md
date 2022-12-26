@@ -39,7 +39,7 @@ Developed using:
 * Linux Ubuntu	22.04
 * QT Creator 6.0.2
 * Requires these libraries:
-    * QT 6
+    * QT 6 (with extra image files formats if you can)
     * openCV 4.6 compiled with openCV-contribs - may work with any 4.x version
 * A c++ compiler which supports c++17
 
