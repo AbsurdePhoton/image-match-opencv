@@ -1,6 +1,6 @@
 # image-match-opencv
 ## A nice GUI using Qt and OpenCV to perform images similarity matching from entire folders - several CUSTOM ALGORITHMS - optimized to be incredibly EFFICIENT and FAST
-### v0 - 2022-12-0618
+### v1 - 2022-12-25
 
 ![Screenshot - Global](screenshots/match.jpg?raw=true)
 <br/>
