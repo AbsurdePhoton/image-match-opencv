@@ -43,7 +43,9 @@ Developed using:
     * openCV 4.6 compiled with openCV-contribs - may work with any 4.x version
 * A c++ compiler which supports c++17
 
-This software should also work under Microsoft Windows, with adjustments: if you compiled it successfully please contact me, I'd like to offer compiled Windows executables too
+This software should also work under Microsoft Windows, with adjustments: if you compiled it successfully please contact me, I'd like to offer compiled Windows executables too!
+
+You will also have to download a DNN model (~128MB) in order to use the DNN classification functions (see the /models folder for instructions) ... or you can use another classification model with not many changes in the code. 
 <br/>
 <br/>
 
@@ -127,7 +129,7 @@ The Duplicates tab displays image matches. But how were they regrouped?
    * dHash (Difference Hash): a tiny 9x8 pixels version of the image is used and pixels are compared with luminosity changes
    * idHash (Important Difference Hash): same principle as dHash, but horizontal AND vertical scans are performed on a 9x9 pixels tiny version of the original image
    * Dominant Colors: the dominant colors of each image (it is NOT a mean) are computed, then these values are compared using their distance in the OKLAB color space - this way images are regrouped by "global" colors - not very accurate but very useful for the special similarity mode "Combined" - notice that the dominant colors algorithm is of my own design, called "Sectored-Means"
-   * DNN Classify: some AI is used here, and you better have a NVidia GPU, although computing with CPU is supported (much slower). Images are classified using a 21K classes reference, and then are compared using the most used percentages of the matched classes - not very accurate but useful for the special similarity mode "Combined" - you'll have to download a big 128MB Caffe model file (with a BitTorrent client) to be able to use it
+   * DNN Classify: some AI is used here, and you better have a NVidia GPU, although computing with CPU is supported (much slower). Images are classified using a 21K classes reference, and then are compared using the most used percentages of the matched classes - not very accurate but useful for the special similarity mode "Combined" - you'll have to download a big 128MB Caffe model file (with a BitTorrent client) to be able to use it - see the /model folder for instrcutions. If you want to use another image classification model, not many changes are needed in the code, if your model delivers a list of classes with floating point percentages
    * Features: images features are matched between the pairs, the more they have in common the more the score will be. This method is able to detect extremely rotated versions of an image - this is very SLOW and you should use it on reduced images lists (2K-3K max)
    * Homothety: a step further from "Features", if a sufficent number of "good" matches are found, an homothety could be found - this usually means images are similar. This method can detect not-so-near duplicates, and extremely rotated versions - this is very efficient but also very SLOW, and you should use it on reduced images lists (2K-3K max)
 * this tool is not perfect:
