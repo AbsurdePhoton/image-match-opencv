@@ -8,7 +8,8 @@
 
 ## HISTORY
 
-* v0: launch
+* v1: use of the 21K+ classes found by DNN classification which allow to search/check images by content - added "move files" button on images list
+* v0: launch - already full of useful functions
 <br/>
 <br/>
 
@@ -62,6 +63,7 @@ This software should also work under Microsoft Windows, with adjustments: if you
 * You can repeat this task many times, images are added only once per folder
 * You can "Clear" the images list to start a new list
 * You can check/uncheck all images, or some of them using the keyword search, or check/uncheck only the selected images, and even invert the selection
+* Special feature thanks to DNN classification: you can search for words describing the image. Enter "cat" to check all cats (hopefully, classification is not an exact science). You'll have sometimes to find the exact term to search, just take a look at the file /models/imagenet-21k-classes.csv which contains the 21K+ classes!
 * You can hide away (exlude) images, or even delete the corresponding files
 * if you double-click an image with the mouse, a new window will appear with a bigger version + some information
 
@@ -102,8 +104,8 @@ The big blocks with algorithms names are for the special similarity mode "Combin
 
 The Duplicates tab displays image matches. But how were they regrouped?
 
-* Good to know, all algorithms give results as a percentage of similarity, from 0 to 100%.
-* Each image pair has a score of x% for a given algorithm.
+* Good to know, all algorithms give results as a percentage of similarity, from 0 to 100%
+* Each image pair has a score of x% for a given algorithm
 * First pass: all the images are tested with each other. This means the more images you have in the images tab, the more operation there will be, because the number of matches will be N.(N-1) / 2 - for example if you have 15000 images to test, there will be 105 million tests to perform!
 * After the 1st pass, all image pairs have a score. Each image has a list of its similar images
 * Second pass: look for each image's closest neighbour. If this neighbour also has a closest neighbour, compare the scores and decide which image goes with which one. No image can be added to a group if its score with all images in this group isn't over the threshold
@@ -124,13 +126,13 @@ The Duplicates tab displays image matches. But how were they regrouped?
 * I added myself these ones:
    * dHash (Difference Hash): a tiny 9x8 pixels version of the image is used and pixels are compared with luminosity changes
    * idHash (Important Difference Hash): same principle as dHash, but horizontal AND vertical scans are performed on a 9x9 pixels tiny version of the original image
-   * Dominant Colors: the dominant color of each image (it is NOT a mean) is computed, then these values are compared using their distance in the OKLAB color space - this way images are regrouped by "global" color - not very accurate but very useful for the special similarity mode "Combined" - notice that the dominant color algorithm is of my own design, called "Sectored-Means"
+   * Dominant Colors: the dominant colors of each image (it is NOT a mean) are computed, then these values are compared using their distance in the OKLAB color space - this way images are regrouped by "global" colors - not very accurate but very useful for the special similarity mode "Combined" - notice that the dominant colors algorithm is of my own design, called "Sectored-Means"
    * DNN Classify: some AI is used here, and you better have a NVidia GPU, although computing with CPU is supported (much slower). Images are classified using a 21K classes reference, and then are compared using the most used percentages of the matched classes - not very accurate but useful for the special similarity mode "Combined" - you'll have to download a big 128MB Caffe model file (with a BitTorrent client) to be able to use it
    * Features: images features are matched between the pairs, the more they have in common the more the score will be. This method is able to detect extremely rotated versions of an image - this is very SLOW and you should use it on reduced images lists (2K-3K max)
    * Homothety: a step further from "Features", if a sufficent number of "good" matches are found, an homothety could be found - this usually means images are similar. This method can detect not-so-near duplicates, and extremely rotated versions - this is very efficient but also very SLOW, and you should use it on reduced images lists (2K-3K max)
 * this tool is not perfect:
    * mirrored images are not easy to find, and probably won't be listed in the duplicates groups, unless you're using methods like "Dominant Color" and "DNN Classify" + features in a COMBINED way
-   * extreme threshold values will surely produce many false-positives 
+   * extreme low threshold values will surely produce many false-positives 
 * Also notice:
    * a lot of results are cached when an algorithm is used: you can recompute the same algorithm with a different threshold in a very reduced time compared to the first pass!
    * with 48GB of RAM, you can test about 25K images, but it is not a good idea to do that in a unique pass (long wait). Prefer sub-groups!
@@ -148,7 +150,7 @@ The Duplicates tab displays image matches. But how were they regrouped?
 * What algorithms to use together? It's easy: use "idHash" alongside others that are not very accurate by themselves like "DNN classify", "Dominant Colors", plus some using like "Features" and "Homography" - for example I often use a threshold of 35% with "DNN" + "Dominant colors" + "Homography" + "idHash"
 * How is a "combined" score computed? Each result for each pair of images for each algorithm is classified as "Exact", "Similar", Different" or "Dissimilar" - this gives a weight that can be multiplied with the initial score - the averaged sum of all algorithms scores is then calculated to give the final result. This looks almost too easy, but it definitely works!
 
-### MAYBE A TO-DO LIST
+### (MAYBE A) TO-DO LIST
 
 * If sufficient attention is given to this program, maybe I could take the time to make it even harder, better, faster, stronger (yes this a song!)
 * make the slowest similarity algorithms run on GPU (all ?)
@@ -162,4 +164,4 @@ The Duplicates tab displays image matches. But how were they regrouped?
 ## Enjoy!
 
 ### AbsurdePhoton
-My photographer website : www.absurdephoton.fr
+My photographer website: www.absurdephoton.fr
