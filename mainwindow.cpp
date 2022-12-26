@@ -768,7 +768,7 @@ void MainWindow::on_button_images_check_text_dnn_clicked() // button pressed -> 
                 images[nbImage].hashDNN = DNNHash(images[nbImage].imageReduced, dnn, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
 
             for (int current = 0; current < images[nbImage].hashDNN.cols; current++) {
-                if (images[nbImage].hashDNN.at<int>(1, current) > 5) {
+                if (images[nbImage].hashDNN.at<int>(1, current) > 0) {
                     std::string text = classes[images[nbImage].hashDNN.at<int>(0, current)];
                     std::size_t pos = text.find(toFind);
                     if (pos != std::string::npos) { // text found ?
