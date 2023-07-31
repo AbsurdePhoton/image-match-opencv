@@ -45,7 +45,9 @@ Developed using:
 
 This software should also work under Microsoft Windows, with adjustments: if you compiled it successfully please contact me, I'd like to offer compiled Windows executables too!
 
-You will also have to download a DNN model (~128MB) in order to use the DNN classification functions (see the /models folder for instructions) ... or you can use another classification model with not many changes in the code. 
+You will also have to download a DNN model (~128MB) in order to use the DNN classification functions (see the /models folder for instructions) ... or you can use another classification model with not many changes in the code.
+
+[EDIT 2023/07/31] I used OpenMP for parallelization, and my program crashes with OpenCV 4.8.0 - I had to comment out the #PRAGMA OMP (...) lines, but the speed gain obtained with OpenMP is no more there :(
 <br/>
 <br/>
 
