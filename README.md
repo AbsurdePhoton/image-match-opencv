@@ -48,6 +48,7 @@ This software should also work under Microsoft Windows, with adjustments: if you
 You will also have to download a DNN model (~128MB) in order to use the DNN classification functions (see the /models folder for instructions) ... or you can use another classification model with not many changes in the code.
 
 [EDIT 2024/06/27] OpenMP is back! There could be a bug in OpenCV v4.8, or maybe there's a memory leak somewhere in my code... I'll investigate further, but know that all works at full speed with OpenCV 4.9+, only with an occasional crash :)
+
 [EDIT 2023/07/31] I used OpenMP for parallelization, and my program crashes with OpenCV 4.8.0 - I had to comment out the #PRAGMA OMP (...) lines, but the speed gain obtained with OpenMP is no more there :(
 <br/>
 <br/>
