@@ -1468,51 +1468,51 @@ void MainWindow::PopulateImagesList(const std::string &folder, const bool &recur
     // image extensions to search
     QStringList fileExtension;
     // PNG OK
-    QStringList() << "*.png";
+    fileExtension << "*.png";
     // JPEG and JPEG2000 OK
-    QStringList() << "*.jpg";
-    QStringList() << "*.jpeg";
-    QStringList() << "*.jp2";
-    QStringList() << "*.jpe";
+    fileExtension << "*.jpg";
+    fileExtension << "*.jpeg";
+    fileExtension << "*.jp2";
+    fileExtension << "*.jpe";
     // TIFF OK
-    QStringList() << "*.tif";
-    QStringList() << "*.tiff";
+    fileExtension << "*.tif";
+    fileExtension << "*.tiff";
     // WebP OK
-    QStringList() << "*.webp";
+    fileExtension << "*.webp";
     // Microsoft OK
-    QStringList() << "*.bmp";
-    QStringList() << "*.dib";
+    fileExtension << "*.bmp";
+    fileExtension << "*.dib";
     // Portable Image Format OK
-    QStringList() << "*.pbm";
-    QStringList() << "*.pgm";
-    QStringList() << "*.ppm";
-    QStringList() << "*.pxm";
-    QStringList() << "*.pnm";
+    fileExtension << "*.pbm";
+    fileExtension << "*.pgm";
+    fileExtension << "*.ppm";
+    fileExtension << "*.pxm";
+    fileExtension << "*.pnm";
     //// PFM !OK
-    QStringList() << "*.pfm";
+    fileExtension << "*.pfm";
     // Sun raster OK
-    QStringList() << "*.sr";
-    QStringList() << "*.ras";
+    fileExtension << "*.sr";
+    fileExtension << "*.ras";
     //// OpenEXR
-    QStringList() << "*.exr";
+    fileExtension << "*.exr";
     // Radiance HDR OK
-    QStringList() << "*.hdr";
-    QStringList() << "*.pic";
+    fileExtension << "*.hdr";
+    fileExtension << "*.pic";
     //// NOT supported by opencv but Qt
     //// X11 !OK
-    QStringList() << "*.xbm";
-    QStringList() << "*.xpm";
+    fileExtension << "*.xbm";
+    fileExtension << "*.xpm";
     // GIF OK
-    QStringList() << "*.gif";
+    fileExtension << "*.gif";
     // TGA OK
-    QStringList() << "*.tga";
+    fileExtension << "*.tga";
     // WBMP OK
-    QStringList() << "*.wbmp";
+    fileExtension << "*.wbmp";
     //// HEIC !OK
-    QStringList() << "*.heic";
+    fileExtension << "*.heic";
     //// not supported at all ?
-    QStringList() << "*.heif";
-    QStringList() << "*.avif";
+    fileExtension << "*.heif";
+    fileExtension << "*.avif";
 
     std::vector<QString> list; // to store dir results
     list.reserve(50000); // reserve memory for lists
@@ -1589,6 +1589,8 @@ void MainWindow::PopulateImagesList(const std::string &folder, const bool &recur
                     img.loadwith = "qt";
                 else if (ext == "gif")
                     img.loadwith = "qt";
+                else
+                    img.loadwith = "opencv";
             }
 
             img.duplicates.reserve(50); // why 50 ? is it enough ?
@@ -2133,7 +2135,7 @@ void MainWindow::CompareImages() // compare images in images list
                             if ((pairs.empty()) or (pair == pairs.end())) { // pair doesn't exist so create it
                                 struct_scores pair; // new pair - scores should already be set to -1 in constructor
                                 pair.score[similarityAlgorithm] = similarity; // save the score between images I and J for the current algorithm
-                                pairs.insert(std::make_pair(imagePair, pair)); // insert the result in the ist
+                                pairs.insert(std::make_pair(imagePair, pair)); // insert the result in the list
                             }
                             else { // pair I,J already exists
                                 pair->second.score[similarityAlgorithm] = similarity; // save the score between images I and J for the current algorithm
