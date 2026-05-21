@@ -9,6 +9,7 @@
 ## HISTORY
 
 * v1.2: finally found out why the compare function crashed: OpenCV's image hash functions don't like being called concurrently, had to add "pauses" at the right places to circumvent
+* v1.1: added frequency domain matching
 * v1: use of the 21K+ classes found by DNN classification which allow to search/check images by content - added "move files" button on images list
 * v0: launch - already full of useful functions
 <br/>
@@ -139,6 +140,8 @@ The Duplicates tab displays image matches. But how were they regrouped?
    * DNN Classify: some AI is used here, and you better have a NVidia GPU, although computing with CPU is supported (much slower). Images are classified using a 21K classes reference, and then are compared using the most used percentages of the matched classes - not very accurate but useful for the special similarity mode "Combined" - you'll have to download a big 128MB Caffe model file (with a BitTorrent client) to be able to use it - see the /model folder for instructions. If you want to use another image classification model, not many changes are needed in the code, if your model delivers a list of classes with floating point percentages
    * Features: images features are matched between the pairs, the more they have in common the more the score will be. This method is able to detect extremely rotated versions of an image - this is very SLOW and you should use it on reduced images lists (2K-3K max)
    * Homothety: a step further from "Features", if a sufficient number of "good" matches are found, an homothety could be found - this usually means images are similar. This method can detect not-so-near duplicates, and extremely rotated versions - this is very efficient but also very SLOW, and you should use it on reduced images lists (2K-3K max)
+   * Frequency domain matching
+
 * this tool is not perfect:
    * mirrored images are not easy to find, and probably won't be listed in the duplicates groups, unless you're using methods like "Dominant Color" and "DNN Classify" + features in a COMBINED way
    * extreme low threshold values will surely produce many false-positives 
@@ -146,6 +149,7 @@ The Duplicates tab displays image matches. But how were they regrouped?
    * a lot of results are cached when an algorithm is used: you can recompute the same algorithm with a different threshold in a very reduced time compared to the first pass!
    * the threshold can be adjusted manually instead of using the list, just type in the percentage
    * with 48GB of RAM, you can test about 25K images, but it is not a good idea to do that in a unique pass (long wait). Prefer sub-groups!
+* Finally : you'll have to modify some functions calls, as i didn't upload on purpose some of the latest versions of helper libraries like "color-spaces" which contain newer functions that i don't want to share, secret-secret!
 
 ### SPECIAL "COMBINED" SIMILARITY ALGORITHM
 
