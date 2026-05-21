@@ -2,6 +2,7 @@
 <qresource>
   <file>./icons/absurdephoton.png</file>
   <file>./icons/add.png</file>
+  <file>./icons/arrow-up.png</file>
   <file>./icons/clear.png</file>
   <file>./icons/color.png</file>
   <file>./icons/color-brightness.png</file>
@@ -57,5 +58,6 @@
   <file>./icons/similarity-features.png</file>
   <file>./icons/similarity-homography.png</file>
   <file>./icons/similarity-classify.png</file>
+  <file>./icons/similarity-frequency.png</file>
 </qresource>
 </RCC>

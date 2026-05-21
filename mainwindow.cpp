@@ -4,9 +4,9 @@
 #
 #       by AbsurdePhoton - www.absurdephoton.fr
 #
-#                   v1 - 2022/12/25
+#                   v1.2 - 2025/08/24
 #
-#-------------------------------------------------*/
+#---------------------------------------------------*/
 
 
 #include "mainwindow.h"
@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     processor_threads = std::thread::hardware_concurrency(); // find how many processor threads in the system
     if (processor_threads >= 2) // at least 2 processors ?
         processor_threads -= 1; // set max number of threads = nb processors - 1
+    //processor_threads = 1; // deactivate multiprocessors - UNCOMMENT ONLY for debug purposes
 
     omp_set_num_threads(processor_threads); // set usable threads for OMP
 
@@ -62,9 +63,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     cv::ocl::Device(context.device(0)); //Here is where you change which GPU to use (e.g. 0 or 1)*/
 
+    /*int n = cv::cuda::getCudaEnabledDeviceCount();
+    //cv::cuda::printCudaDeviceInfo(n);
+    if (n > 0)
+        cv::cuda::setDevice(0);*/
+
     //// GUI
     // Main Window : bars, buttons, etc
-    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::Round);
     setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowMinMaxButtonsHint); // just minimize and size buttons
     this->setWindowState(Qt::WindowMaximized); // maximize window
     setFocusPolicy(Qt::StrongFocus); // catch keyboard and mouse in priority
@@ -88,12 +93,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_algo->addItem("DNN Classify");
     ui->comboBox_algo->addItem("Features");
     ui->comboBox_algo->addItem("Homography");
+    ui->comboBox_algo->addItem("Frequency");
     ui->comboBox_algo->addItem("Combined");
     ui->comboBox_algo->insertSeparator(1); // below checksum
     ui->comboBox_algo->insertSeparator(5); //
     ui->comboBox_algo->insertSeparator(9);
     ui->comboBox_algo->insertSeparator(12);
     ui->comboBox_algo->insertSeparator(15);
+    ui->comboBox_algo->insertSeparator(16);
     ui->comboBox_algo->setCurrentIndex(2);
     ui->comboBox_algo->blockSignals(false);
     ui->comboBox_level->blockSignals(true); // block signals for combobox
@@ -138,12 +145,22 @@ MainWindow::MainWindow(QWidget *parent) :
     listWidgetDelegate = new ListWidgetDelegate; // same here
     ui->listWidget_image_list->setItemDelegate(listWidgetDelegate);
 
-    // initial values for options and combobox
+    // initial values for options and combobox -> also sets important values like thumbnailSize, reducedSize and nbFeatures
     ui->comboBox_algo->setCurrentIndex(0); // should also set threshold
-    ui->comboBox_level->setCurrentIndex(3); // "Similar"
+    ui->comboBox_level->setCurrentIndex(3); // "Exact"
     ui->spinBox_thumbnails_size->setValue(176); // thumbnails size default is 176x176px
     ui->spinBox_reduced_size->setValue(256); // default working images size is 256x256px
     ui->spinBox_nb_features->setValue(150); // default number of image features to find (also for homography algorithm)
+
+    // other objects
+    ui->label_algorithm_arrow->setVisible(false); // hide arrow from algorithm description
+    ui->comboBox_algo->setCurrentIndex(1);
+    ui->comboBox_algo->setCurrentIndex(0);
+    ui->label_algorithm->setVisible(false); // hide description and its arrow
+    ui->label_algorithm_arrow->setVisible(false);
+
+    // default tab is images
+    ui->tabWidget->setCurrentIndex(0);
 
     //qDebug("Variables initialized");
     //qDebug() << QImageReader::supportedImageFormats(); // show in debug what images OpenCV can read
@@ -218,6 +235,14 @@ void MainWindow::InitializeValues() // Global variables and GUI elements init
     ReadThresholdsConfig(); // read thresholds from file
 }
 
+void MainWindow::on_tabWidget_currentChanged(int) // tab changed ?
+{
+    // show algorithm description ?
+    bool showDescription = (ui->tabWidget->currentWidget() == ui->tab_duplicates);
+    ui->label_algorithm->setVisible(showDescription);
+    ui->label_algorithm_arrow->setVisible(showDescription);
+}
+
 void MainWindow::on_comboBox_algo_currentIndexChanged(int algo) // change algo -> set value to threshold
 {
     std::string text = ui->comboBox_algo->currentText().toStdString(); // current text from combobox
@@ -261,14 +286,19 @@ void MainWindow::on_comboBox_algo_currentIndexChanged(int algo) // change algo -
         case _("DNN Classify"):
             similarityAlgorithm = img_similarity_dnn_classify;
             break;
+        case _("Frequency"):
+            similarityAlgorithm = img_similarity_frequency;
+            break;
         case _("Combined"): // special
             similarityAlgorithm = img_similarity_count;
             break;
         default:
-            similarityAlgorithm = img_similarity_count;
+            similarityAlgorithm = img_similarity_count; ui->label_algorithm_arrow->setVisible(false); ui->label_algorithm->setText(""); break;
     }
 
     ui->doubleSpinBox_threshold->setValue(thresholds[similarityAlgorithm][ui->comboBox_level->currentIndex()]); // set current threshold value for this similarity algorithm
+    ui->label_algorithm->setText(QString::fromStdString(imageSimilarityDescription[similarityAlgorithm]));
+    ui->label_algorithm_arrow->setVisible(true);
 }
 
 void MainWindow::on_comboBox_level_currentIndexChanged(int level) // set value to threshold doubleSpinBox when level has changed
@@ -291,6 +321,7 @@ void MainWindow::SetCombinedActivated(const imageSimilarityAlgorithm &algorithm,
         case img_similarity_features:           ui->checkBox_combined_features->setChecked(activated);break;
         case img_similarity_homography:         ui->checkBox_combined_homography->setChecked(activated);break;
         case img_similarity_dnn_classify:       ui->checkBox_combined_classify->setChecked(activated);break;
+        case img_similarity_frequency:          ui->checkBox_combined_frequency->setChecked(activated);break;
     }
 }
 
@@ -309,6 +340,7 @@ void MainWindow::HideCombinedAlgorithm(const imageSimilarityAlgorithm &algo, con
         case img_similarity_features:           ui->frame_combined_features->setDisabled(value);break;
         case img_similarity_homography:         ui->frame_combined_homography->setDisabled(value);break;
         case img_similarity_dnn_classify:       ui->frame_combined_classify->setDisabled(value);break;
+        case img_similarity_frequency:          ui->frame_combined_frequency->setDisabled(value);break;
     }
 }
 
@@ -513,6 +545,8 @@ void MainWindow::on_button_quit_clicked() // quit GUI
     delete listWidgetDelegate; // free images list delegate
     delete treeWidgetDelegate; // free duplicates list delegate
 
+    dnnInception = cv::dnn::Net(); // destroy the DNN instance in time before quitting
+
     QCoreApplication::quit(); // quit program
 }
 
@@ -558,13 +592,12 @@ void MainWindow::ChangeBaseDir(QString filename) // set base dir and file
 
 QPixmap MainWindow::LoadImagePix(const std::string &path, const std::string &engine) // return a Qt QPixmap from image file using different loading engines
 {
-    QPixmap result; // image to return
-
     if (engine == "opencv") { // loading image engine is OpenCV ?
-        cv::Mat img = imread(path, cv::IMREAD_COLOR); // read image
+        cv::Mat img = cv::imread(path, cv::IMREAD_UNCHANGED); // read image
 
-        if (!img.empty()) // success ?
-            return Mat2QPixmap(img); // return converted image from OpenCV to Qt format
+        img = ImageAnydepthToColor(img);
+
+        return Mat2QPixmap(img);
     }
     else if (engine == "qt") { // loading image engine is Qt ?
         return QPixmap(QString::fromStdString(path)); // read image and return it
@@ -575,13 +608,14 @@ QPixmap MainWindow::LoadImagePix(const std::string &path, const std::string &eng
 
 cv::Mat MainWindow::LoadImageMat(const std::string &path, const std::string &engine) // return an OpenCV Mat from image file using different loading engines
 {
-    cv::Mat result; // comments are almost the same as LoadImagePix
+    // comments are almost the same as LoadImagePix
 
     if (engine == "opencv") {
-        cv::Mat img = imread(path, cv::IMREAD_COLOR);
+        cv::Mat img = cv::imread(path, cv::IMREAD_UNCHANGED);
 
-        if (!img.empty())
-            return img;
+        img = ImageAnydepthToColor(img);
+
+        return img;
     }
     else if (engine == "qt") {
         QPixmap img = QPixmap(QString::fromStdString(path));
@@ -620,6 +654,8 @@ void MainWindow::on_button_images_clear_clicked() // button pressed -> clear ima
 
     // clear duplicates
     ClearDuplicates(); // clear duplicates list and enable gui items and clear some variables too
+    ui->frame_group_thumbnails_size->setDisabled(false);
+    ui->frame_group_reduced_size->setDisabled(false);
 }
 
 void MainWindow::ImagesListClick(QListWidgetItem *item) // click on item in images list -> toggle checked status
@@ -634,13 +670,13 @@ void MainWindow::ImagesListClick(QListWidgetItem *item) // click on item in imag
 
 QString MainWindow::GetImageClass(const int &imgNumber) // get DNN class of an image if it exists
 {
-    if (dnn.empty()) { // if DNN structures not already defined
+    if (dnnInception.empty()) { // if DNN structures not already defined
         PrepareDNN();
     }
 
     if ((!images[imgNumber].deleted) and (!images[imgNumber].error)) {
         if (images[imgNumber].hashDNN.empty())
-            images[imgNumber].hashDNN = DNNHash(images[imgNumber].imageReduced, dnn, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
+            images[imgNumber].hashDNN = DNNHash(images[imgNumber].imageReduced, dnnInception, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
         std::string classTxt = classes[images[imgNumber].hashDNN.at<int>(0, 0)];
         std::string percentageTxt = std::to_string(images[imgNumber].hashDNN.at<int>(1, 0));
         std::string retTxt = " [ " + classTxt + " " + percentageTxt + "% ]";
@@ -731,7 +767,7 @@ void MainWindow::on_button_images_check_text_clicked() // button pressed -> find
 
     for(int n = 0; n < ui->listWidget_image_list->count(); n++) { // parse all widget items
         QListWidgetItem* item = ui->listWidget_image_list->item(n); // current item
-        if (item->text().contains(ui->lineEdit_images_check_text->text(), Qt::CaseInsensitive)) { // is the searched text found in this item's text ?
+        if ((item->text().contains(ui->lineEdit_images_check_text->text(), Qt::CaseInsensitive)) or (item->toolTip().contains(ui->lineEdit_images_check_text->text(), Qt::CaseInsensitive))) { // is the searched text found in this item's text ?
             item->setCheckState(checkedState); // set its check state to reference check state
             item->setSelected(true);
         }
@@ -755,7 +791,7 @@ void MainWindow::on_button_images_check_text_dnn_clicked() // button pressed -> 
     ShowProgress(progress_run, "Searching images context", 0, sum);
     ShowProgress(progress_update, "", 0);
 
-    if (dnn.empty()) { // if DNN structures not already defined
+    if (dnnInception.empty()) { // if DNN structures not already defined
         PrepareDNN();
     }
 
@@ -765,7 +801,7 @@ void MainWindow::on_button_images_check_text_dnn_clicked() // button pressed -> 
 
         if ((!images[nbImage].error) and (!images[nbImage].deleted)) {
             if (images[nbImage].hashDNN.empty())  // if classes are not already computed
-                images[nbImage].hashDNN = DNNHash(images[nbImage].imageReduced, dnn, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
+                images[nbImage].hashDNN = DNNHash(images[nbImage].imageReduced, dnnInception, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
 
             for (int current = 0; current < images[nbImage].hashDNN.cols; current++) {
                 if (images[nbImage].hashDNN.at<int>(1, current) > 0) {
@@ -794,7 +830,7 @@ void MainWindow::on_button_images_check_text_dnn_clicked() // button pressed -> 
     ShowProgress(progress_finished, "Images context search finished"); // end the current progress (that hides the animated wainting icon and restores the mouse cursor
 }
 
-// Remove and delete and move
+//// Remove and delete and move
 
 void MainWindow::RemoveImageFromListImages(QListWidgetItem *item) // remove one item from image list by its pointer
 {
@@ -839,7 +875,7 @@ void MainWindow::on_button_images_hide_error_clicked() // button pressed -> hide
     ShowProgress(progress_update, 0);
 
     for (int n = 0; n < int(images.size()); n++) { // parse all internal images list
-        if (images[n].error) { // is the image tagged as error ?
+        if ((images[n].error) and (!images[n].deleted)) { // is the image tagged as error ?
             RemoveImageFromListImages(images[n].imageItem); // remove it from view
             images[n].deleted = true; // tag image as deleted
         }
@@ -1180,7 +1216,7 @@ void MainWindow::on_button_duplicates_check_text_clicked() // button pressed -> 
     }
 }
 
-// Remove and delete
+//// Remove and delete
 
 void MainWindow::on_button_duplicates_hide_clicked() // button pressed -> hide checked duplicates in duplicates list
 {
@@ -1402,7 +1438,7 @@ void MainWindow::on_button_duplicates_move_clicked() // button pressed -> move f
     }
 }
 
-// Loading
+//// Loading
 
 void MainWindow::DuplicatesListDoubleClick(QTreeWidgetItem *item, int column) // double-click duplicate image to open it in a new window
 {
@@ -1455,6 +1491,8 @@ QColor MainWindow::ImageTypeColor(const std::string &extension) // returns image
         return QColor(224,255,255); // pale cyan
     if (extension == "webp")
         return QColor(255,224,224); // pale red
+    if (extension == "avif")
+        return QColor(255,224,255); // pale rose
 
     return QColor(204,204,255); // other formats : violet
 }
@@ -1467,18 +1505,37 @@ void MainWindow::PopulateImagesList(const std::string &folder, const bool &recur
 {
     // image extensions to search
     QStringList fileExtension;
-    // PNG OK
-    fileExtension << "*.png";
     // JPEG and JPEG2000 OK
     fileExtension << "*.jpg";
     fileExtension << "*.jpeg";
-    fileExtension << "*.jp2";
     fileExtension << "*.jpe";
+    fileExtension << "*.jif";
+    fileExtension << "*.jfif";
+    // JPEG2000 OK
+    fileExtension << "*.jp2";
+    fileExtension << "*.j2k";
+    fileExtension << "*.jpf";
+    fileExtension << "*.jpm";
+    fileExtension << "*.jpg2";
+    fileExtension << "*.j2c";
+    fileExtension << "*.jpc";
+    // JPEG XL
+    fileExtension << "*.jxl"; // supported since OpenCV 4.11
+    // JPEG XR
+    fileExtension << "*.jxr";
+    fileExtension << "*.wdp";
+    fileExtension << "*.hdp";
+    // JPEG stereoscopic
+    fileExtension << "*.jps";
     // TIFF OK
     fileExtension << "*.tif";
     fileExtension << "*.tiff";
+    // PNG OK
+    fileExtension << "*.png";
     // WebP OK
     fileExtension << "*.webp";
+    // AVIF OK
+    fileExtension << "*.avif";
     // Microsoft OK
     fileExtension << "*.bmp";
     fileExtension << "*.dib";
@@ -1486,33 +1543,45 @@ void MainWindow::PopulateImagesList(const std::string &folder, const bool &recur
     fileExtension << "*.pbm";
     fileExtension << "*.pgm";
     fileExtension << "*.ppm";
-    fileExtension << "*.pxm";
+    fileExtension << "*.pam";
     fileExtension << "*.pnm";
-    //// PFM !OK
     fileExtension << "*.pfm";
     // Sun raster OK
-    fileExtension << "*.sr";
     fileExtension << "*.ras";
+    fileExtension << "*.sun";
+    fileExtension << "*.sr";
     //// OpenEXR
     fileExtension << "*.exr";
     // Radiance HDR OK
     fileExtension << "*.hdr";
     fileExtension << "*.pic";
     //// NOT supported by opencv but Qt
-    //// X11 !OK
-    fileExtension << "*.xbm";
-    fileExtension << "*.xpm";
-    // GIF OK
-    fileExtension << "*.gif";
+    // HEIC
+    fileExtension << "*.heic";
+    fileExtension << "*.heif";
+    // MNG
+    fileExtension << "*.mng";
     // TGA OK
     fileExtension << "*.tga";
     // WBMP OK
     fileExtension << "*.wbmp";
-    //// HEIC !OK
-    fileExtension << "*.heic";
-    //// not supported at all ?
-    fileExtension << "*.heif";
-    fileExtension << "*.avif";
+    // GIF OK
+    fileExtension << "*.gif";
+    //// X11 !OK
+    fileExtension << "*.xbm";
+    fileExtension << "*.xpm";
+    //// Windows icons and cursors !OK
+    fileExtension << "*.ico";
+    fileExtension << "*.cur";
+    //// PCX !OK
+    fileExtension << "*.pcx";
+    //// Photoshop !OK
+    fileExtension << "*.psd";
+    //// SGI ? !OK
+    fileExtension << "*.sgi";
+    //// X-windows !OK
+    fileExtension << "*.xwd";
+
 
     std::vector<QString> list; // to store dir results
     list.reserve(50000); // reserve memory for lists
@@ -1550,7 +1619,7 @@ void MainWindow::PopulateImagesList(const std::string &folder, const bool &recur
 
             // image file type will tell which engine (OpenCV or Qt) will be used to load it
             std::string ext = stringutils::ToLower(img.extension);
-            if ((ext == "jpg") or (ext == "jpeg") or (ext == "jp2") or (ext == "jpe")) {
+            if ((ext == "jpg") or (ext == "jpeg") or (ext == "jp2") or (ext == "j2k") or (ext == "jpf") or (ext == "jpm") or (ext == "jpg2") or (ext == "j2c") or (ext == "jpc") or (ext == "jpe") or (ext == "jif") or (ext == "jfif") or (ext == "jxl") or (ext == "jxr") or (ext == "wdp") or (ext == "hdp") or (ext == "jps")) { // jxl supported since OpenCV 4.11
                 img.type = "jpeg";
                 img.loadwith = "opencv";
             }
@@ -1566,31 +1635,35 @@ void MainWindow::PopulateImagesList(const std::string &folder, const bool &recur
                 img.type = "webp";
                 img.loadwith = "opencv";
             }
+            else if (ext == "avif") {
+                img.type = "avif";
+                img.loadwith = "opencv";
+            }
             else {
                 img.type = "other";
 
-                if ((ext == "bmp") or (ext == "dib"))
+                if ((ext == "bmp") or (ext == "dib")) // with OpenCV
                     img.loadwith = "opencv";
-                else if ((ext == "pbm") or (ext == "pgm") or (ext == "ppm") or (ext == "pxm") or (ext == "pnm"))
+                else if ((ext == "pbm") or (ext == "pgm") or (ext == "ppm") or (ext == "pam") or (ext == "pnm") or (ext == "pfm")) // with OpenCV
                     img.loadwith = "opencv";
-                else if ((ext == "sr") or (ext == "ras"))
+                else if ((ext == "sr") or (ext == "sun") or (ext == "ras")) // with OpenCV
                     img.loadwith = "opencv";
-                else if (ext == "exr")
+                else if (ext == "exr") // with OpenCV
                     img.loadwith = "opencv";
-                else if ((ext == "hdr") or (ext == "pic"))
+                else if ((ext == "hdr") or (ext == "pic")) // with OpenCV
                     img.loadwith = "opencv";
-                else if ((ext == "heic") or (ext == "heif"))
+                else if ((ext == "heic") or (ext == "heif")) // with Qt
                     img.loadwith = "qt";
-                else if (ext == "mng")
+                else if (ext == "mng") // with Qt
                     img.loadwith = "qt";
-                else if (ext == "tga")
+                else if (ext == "tga") // with Qt
                     img.loadwith = "qt";
-                else if (ext == "wbmp")
+                else if (ext == "wbmp") // with Qt
                     img.loadwith = "qt";
-                else if (ext == "gif")
+                else if (ext == "gif") // with Qt
                     img.loadwith = "qt";
                 else
-                    img.loadwith = "opencv";
+                    img.loadwith = "opencv"; // default = OpenCV
             }
 
             img.duplicates.reserve(50); // why 50 ? is it enough ?
@@ -1665,20 +1738,22 @@ void MainWindow::ComputeImagesListInfo() // compute all other required info in i
                     images[n].width = pix.cols; // get image width
                     images[n].height = pix.rows; // get image height
                     images[n].imageSize = images[n].width * images[n].height; // size = width x height
-                    pix = QualityResizeImageAspectRatio(pix, cv::Size(reducedSize, reducedSize)); // resize image to working image size (see options tab)
+                    pix = QualityResizeImageAspectRatio(pix, cv::Size(reducedSize, reducedSize)); // resize image to working image size (see Options tab)
+
                     // icon
                     cv::Mat icon = cv::Mat(thumbnailsSize, thumbnailsSize - 1, CV_8UC3); // size - 1 in vertical for display reasons (line under item in duplicates list)
                     icon = cv::Vec3b(148, 148, 148); // fill the icon image with gray
                     cv::Mat reduced = QualityResizeImageAspectRatio(pix, cv::Size(thumbnailsSize, thumbnailsSize)); // image icon
-                    PasteImageColor(icon, reduced, (thumbnailsSize - reduced.cols) / 2, (thumbnailsSize - reduced.rows) / 2, false); // paste it upon the gray block
-                    //cv::rectangle(icon, cv::Point(0, 0), cv::Point(icon.cols - 1, icon.rows - 1), cv::Vec3b(0, 0, 0), 1, cv::LINE_8);
-                    //cv::line(icon, cv::Point(0, 0), cv::Point(icon.cols - 1, 0), cv::Vec3b(0, 0, 0), 1, cv::LINE_8);
+                    PasteImageFast(icon, reduced, (thumbnailsSize - reduced.cols) / 2, (thumbnailsSize - reduced.rows) / 2); // paste it upon the gray block
                     cv::line(icon, cv::Point(0, 0), cv::Point(0, icon.rows - 1), cv::Vec3b(0, 0, 0), 1, cv::LINE_8); // draw vertical lines on left and right of the icon
                     cv::line(icon, cv::Point(icon.cols - 1, 0), cv::Point(icon.cols - 1, icon.rows - 1), cv::Vec3b(0, 0, 0), 1, cv::LINE_8);
                     images[n].icon = Mat2QPixmap(icon); // convert cv::Mat to QPixmap, store it in image item
+
                     // cached reduced image
                     images[n].imageReduced = pix; // reduced color image, store it too
-                    // equalize histogram of reduced image
+                    cv::normalize(images[n].imageReduced, images[n].imageReduced, 0, 255, cv::NORM_MINMAX);
+
+                    /*// equalize histogram of reduced image
                     cv::Mat ycrcb; // will do it in YCrCb color space
                     cv::cvtColor(images[n].imageReduced, ycrcb, cv::COLOR_BGR2YCrCb); // convert image to color space
                     std::vector<cv::Mat> channels;
@@ -1688,7 +1763,8 @@ void MainWindow::ComputeImagesListInfo() // compute all other required info in i
                     clahe->apply(channels[0], channels[0]); // apply CLAHE to luminosity channel of image
                     //cv::equalizeHist(channels[0], channels[0]);
                     cv::merge(channels, ycrcb); // re-merge channels
-                    cv::cvtColor(ycrcb, images[n].imageReduced, cv::COLOR_YCrCb2BGR); // convert back image from color space, store it
+                    cv::cvtColor(ycrcb, images[n].imageReduced, cv::COLOR_YCrCb2BGR); // convert back image from color space, store it*/
+
                     // gray reduced image
                     cv::cvtColor(images[n].imageReduced, images[n].imageReducedGray, cv::COLOR_BGR2GRAY); // convert reduced image to gray, store it
 
@@ -1810,18 +1886,19 @@ float MainWindow::CombinedScore(const int &i, const int &j) // get combined scor
     for (int n = img_similarity_checksum; n < img_similarity_count; n++) { // parse all algorithms
         bool activated = false; // indicate if this score should be processed - each one is activated or not in the options tab
         switch (n) { // which algorithm ?
-            case img_similarity_checksum:  activated = ui->checkBox_combined_checksum->checkState();break;
-            case img_similarity_pHash:  activated = ui->checkBox_combined_phash->checkState();break;
-            case img_similarity_dHash:  activated = ui->checkBox_combined_dhash->checkState();break;
-            case img_similarity_idHash:  activated = ui->checkBox_combined_idhash->checkState();break;
-            case img_similarity_block_mean:  activated = ui->checkBox_combined_blockmean->checkState();break;
-            case img_similarity_marr_hildreth:  activated = ui->checkBox_combined_marrhildreth->checkState();break;
-            case img_similarity_radial_variance:  activated = ui->checkBox_combined_radialvariance->checkState();break;
-            //case img_similarity_color_moments:  activated = ui->checkBox_combined_colormoments->checkState();break;
-            case img_similarity_dominant_colors:  activated = ui->checkBox_combined_dominantcolors->checkState();break;
-            case img_similarity_features:  activated = ui->checkBox_combined_features->checkState();break;
-            case img_similarity_homography:  activated = ui->checkBox_combined_homography->checkState();break;
-            case img_similarity_dnn_classify:  activated = ui->checkBox_combined_classify->checkState();break;
+            case img_similarity_checksum:           activated = ui->checkBox_combined_checksum->checkState();break;
+            case img_similarity_pHash:              activated = ui->checkBox_combined_phash->checkState();break;
+            case img_similarity_dHash:              activated = ui->checkBox_combined_dhash->checkState();break;
+            case img_similarity_idHash:             activated = ui->checkBox_combined_idhash->checkState();break;
+            case img_similarity_block_mean:         activated = ui->checkBox_combined_blockmean->checkState();break;
+            case img_similarity_marr_hildreth:      activated = ui->checkBox_combined_marrhildreth->checkState();break;
+            case img_similarity_radial_variance:    activated = ui->checkBox_combined_radialvariance->checkState();break;
+            //case img_similarity_color_moments:    activated = ui->checkBox_combined_colormoments->checkState();break;
+            case img_similarity_dominant_colors:    activated = ui->checkBox_combined_dominantcolors->checkState();break;
+            case img_similarity_features:           activated = ui->checkBox_combined_features->checkState();break;
+            case img_similarity_homography:         activated = ui->checkBox_combined_homography->checkState();break;
+            case img_similarity_dnn_classify:       activated = ui->checkBox_combined_classify->checkState();break;
+            case img_similarity_frequency:          activated = ui->checkBox_combined_frequency->checkState();break;
         }
 
         if ((activated) and (pairScore->second.score[n] != -1)) { // if the score is to be processed and it is not invalid
@@ -1875,15 +1952,17 @@ bool MainWindow::ImagesAreDuplicates(const int &i, const int &j, const imageSimi
         {
             if (images[i].dominantColors.empty()) { // for image I - if palette is not already computed
                 cv::Mat reduced = ResizeImageAspectRatio(images[i].imageReduced, cv::Size(64, 64)); // resize image to a tiny size
-                reduced = ConvertImageRGBtoOKLAB(reduced); // convert it to OKLAB color space
+                //reduced = ConvertImageRGBtoOKLAB(reduced); // convert it to OKLAB color space
+                reduced = ConvertImageToColorSpace(reduced, color_space_RGB, color_space_OKLAB, true);
                 cv::Mat quantized;
-                images[i].dominantColors = DominantColorsEigen(reduced, 8, quantized); // quantize it with Eigen method, keep the resulting palette
+                images[i].dominantColors = DominantColorsEigenLab(reduced, 8, quantized); // quantize it with Eigen method, keep the resulting palette
             }
             if (images[j].dominantColors.empty()) { // same for image J
                 cv::Mat reduced = ResizeImageAspectRatio(images[j].imageReduced, cv::Size(64, 64));
-                reduced = ConvertImageRGBtoOKLAB(reduced);
+                //reduced = ConvertImageRGBtoOKLAB(reduced);
+                reduced = ConvertImageToColorSpace(reduced, color_space_RGB, color_space_OKLAB, true);
                 cv::Mat quantized;
-                images[j].dominantColors = DominantColorsEigen(reduced, 8, quantized);
+                images[j].dominantColors = DominantColorsEigenLab(reduced, 8, quantized);
             }
         }
     }
@@ -1910,10 +1989,10 @@ bool MainWindow::ImagesAreDuplicates(const int &i, const int &j, const imageSimi
         if (images[i].hashDNN.empty()) { // image I - if classes are not already computed
             // VGG-16 : size=224, mean=(123.68, 116.779, 103.939))
             // Inception-21k : size=224, mean=(117, 117, 117)
-            images[i].hashDNN = DNNHash(images[i].imageReduced, dnn, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
+            images[i].hashDNN = DNNHash(images[i].imageReduced, dnnInception, 224, cv::Scalar(117, 117, 117), 16); // compute classes using Inception-21k model
         }
         if (images[j].hashDNN.empty()) { // same for image J
-            images[j].hashDNN = DNNHash(images[j].imageReduced, dnn, 224, cv::Scalar(117, 117, 117), 16);
+            images[j].hashDNN = DNNHash(images[j].imageReduced, dnnInception, 224, cv::Scalar(117, 117, 117), 16);
         }
     }
     /*else if (similarityAlgorithm == img_similarity_color_moments) {
@@ -2005,7 +2084,7 @@ bool MainWindow::ImagesAreDuplicates(const int &i, const int &j, const imageSimi
     //// final result : are images similar ?
 
     switch (similarityAlgorithm) { // which algorithm ?
-        case img_similarity_checksum: { // checksum : same or diffrent, the only algorithm that is binary
+        case img_similarity_checksum: { // checksum : same or different, the only algorithm that is binary
             if (match >= threshold) { // threshold should be 100%
                 if ((images[i].width == images[j].width) and (images[i].height == images[j].height)) { // check images sizes to eliminate checksum collisions (not perfect but should work at 99.999%)
                     duplicate = true; // same sizes -> images are duplicates !
@@ -2016,6 +2095,7 @@ bool MainWindow::ImagesAreDuplicates(const int &i, const int &j, const imageSimi
         default: { // all other matching scores
             if (match >= threshold) // is the score more than threshold ?
                 duplicate = true; // images are duplicates !
+            break;
         }
     }
 
@@ -2058,7 +2138,7 @@ std::string MainWindow::GetHashString(const int &imageNumber, const imageSimilar
 
 void MainWindow::PrepareDNN() // prepare DNN and classes structures
 {
-    DNNPrepare(dnn, "models/Inception21k.caffemodel", "models/Inception21k-bn.prototxt"); // prepare DNN model Unception 21K
+    DNNPrepare(dnnInception, "models/Inception21k.caffemodel", "models/Inception21k-bn.prototxt"); // prepare DNN model Unception 21K
     classes.reserve(21850);
     std::ifstream file("models/imagenet-21k-classes.csv");
     std::string str;
@@ -2107,7 +2187,7 @@ void MainWindow::CompareImages() // compare images in images list
     ShowProgress(progress_update, "", 0);
 
     //// DNN initialization
-    if ((similarityAlgorithm == img_similarity_dnn_classify) and (dnn.empty())) { // if DNN algorithm and not already defined
+    if ((similarityAlgorithm == img_similarity_dnn_classify) and (dnnInception.empty())) { // if DNN algorithm and not already defined
         PrepareDNN();
     }
 
@@ -2570,6 +2650,7 @@ bool MainWindow::ReadThresholdsConfig() // read thresholds from config file, ret
                     case _("features"):         similarityType = img_similarity_features; break;
                     case _("homography"):       similarityType = img_similarity_homography; break;
                     case _("dnnclassify"):      similarityType = img_similarity_dnn_classify; break;
+                    case _("frequency"):        similarityType = img_similarity_frequency; break;
                     case _("combined"):         similarityType = img_similarity_count; break;
                     default:                    QMessageBox::critical(this, "Error",
                                                                       "Error in config file at line " + QString::number(line) + ":\n" + "Unknown value type");
@@ -2577,7 +2658,7 @@ bool MainWindow::ReadThresholdsConfig() // read thresholds from config file, ret
                 }
 
                 if (configData.valuesNumber.size() == 4) {
-                    std::vector<float> values;
+                    //std::vector<float> values;
                     // categories : 0 < dissimilar < different < similar < ∞ (exact)
                     for (int i = 0; i < 4; i++)
                         thresholds[similarityType][i] = configData.valuesNumber[i];
@@ -2595,13 +2676,12 @@ bool MainWindow::ReadThresholdsConfig() // read thresholds from config file, ret
 
 void MainWindow::on_button_examine_clicked() // set as a test at the beginning, this function is useful to estimate the real visual similarity between two images
     // the first 2 checked items if the duplicates list are tested in this function
-    // it shows in a new window the é images side by side, the one with least resolution is displayed on the left
+    // it shows in a new window the 2 images side by side, the one with least resolution is displayed on the left
     // "good" features matches are displayed with cyan lines
     // if an homography is found, draw it too
 {
     //// find the 2 first checked images in duplicates list
 
-    QPixmap q1, q2;
     int im1 = -1;
     int im2 = -1;
 
@@ -2639,8 +2719,6 @@ void MainWindow::on_button_examine_clicked() // set as a test at the beginning, 
     }
 
     cv::Mat homography; // 3x3 resulting homography
-    /*std::vector<cv::KeyPoint> keypoints1, keypoints2; // for image features
-    cv::Mat descriptors1, descriptors2;*/
     std::vector<cv::Point2f> goodPoints1, goodPoints2;
     if (images[im1].keypoints.empty()) // for image 1 - if keypoints were not already computed
         ComputeImageDescriptors(images[im1].imageReducedGray, images[im1].keypoints, images[im1].descriptors, false, reducedSize, nbFeatures); // compute keypoints
@@ -2657,8 +2735,10 @@ void MainWindow::on_button_examine_clicked() // set as a test at the beginning, 
     int height = std::max(images[im1].imageReduced.rows, images[im2].imageReduced.rows);
     height += 200;
     cv::Mat display = cv::Mat::zeros(height, width, CV_8UC3); // create the empty view, black background
-    PasteImageColor(display, images[im1].imageReduced, 50, 100); // paste the reduced images on it
-    PasteImageColor(display, images[im2].imageReduced, 150 + images[im1].imageReduced.cols, 100);
+    //PasteImageColorSlow(display, images[im1].imageReduced, 50, 100, false, cv::Vec3b(0, 0, 0), true); // paste the reduced images on it
+    PasteImageFast(display, images[im1].imageReduced, 50, 100);
+    //PasteImageColorSlow(display, images[im2].imageReduced, 150 + images[im1].imageReduced.cols, 100, false, cv::Vec3b(0, 0, 0), true);
+    PasteImageFast(display, images[im2].imageReduced, 150 + images[im1].imageReduced.cols, 100);
 
     //// draw the matches
     for (int n = 0; n < int(goodPoints1.size()); n++) { // from the "good matches" list

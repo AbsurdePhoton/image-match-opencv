@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>1080</height>
+    <height>1051</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
-   <enum>Qt::NoContextMenu</enum>
+   <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>ImageMatch</string>
@@ -52,7 +52,6 @@
      <font>
       <family>Arial</family>
       <pointsize>11</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -60,7 +59,7 @@
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="focusPolicy">
-     <enum>Qt::NoFocus</enum>
+     <enum>Qt::FocusPolicy::NoFocus</enum>
     </property>
     <property name="toolTip">
      <string/>
@@ -112,10 +111,10 @@ QToolTip {
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
+     <enum>QFrame::Shape::NoFrame</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Shadow::Raised</enum>
     </property>
     <widget class="QLabel" name="label_logo">
      <property name="geometry">
@@ -167,19 +166,19 @@ v0 - first version, but already full of image matching algorithms!</string>
       <string notr="true">background: white;</string>
      </property>
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::Shape::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Sunken</enum>
+      <enum>QFrame::Shadow::Sunken</enum>
      </property>
      <property name="text">
-      <string>v1</string>
+      <string>v1.2</string>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
      <property name="margin">
       <number>0</number>
@@ -213,10 +212,10 @@ v0 - first version, but already full of image matching algorithms!</string>
       <string notr="true">background: white;</string>
      </property>
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::Shape::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Sunken</enum>
+      <enum>QFrame::Shadow::Sunken</enum>
      </property>
      <property name="lineWidth">
       <number>3</number>
@@ -225,7 +224,7 @@ v0 - first version, but already full of image matching algorithms!</string>
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Image Match&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;by &lt;span style=&quot; color:#d89d1a;&quot;&gt;AbsurdePhoton&lt;/span&gt;&lt;a href=&quot;https://www.absurdephoton.fr&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;&lt;br/&gt;www.absurdephoton.fr&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>
@@ -256,10 +255,10 @@ v0 - first version, but already full of image matching algorithms!</string>
 }</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
+     <enum>QFrame::Shadow::Sunken</enum>
     </property>
     <property name="lineWidth">
      <number>2</number>
@@ -271,7 +270,7 @@ v0 - first version, but already full of image matching algorithms!</string>
      <number>9</number>
     </property>
     <property name="segmentStyle">
-     <enum>QLCDNumber::Filled</enum>
+     <enum>QLCDNumber::SegmentStyle::Filled</enum>
     </property>
     <property name="value" stdset="0">
      <double>0.000000000000000</double>
@@ -293,7 +292,7 @@ v0 - first version, but already full of image matching algorithms!</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="focusPolicy">
-     <enum>Qt::NoFocus</enum>
+     <enum>Qt::FocusPolicy::NoFocus</enum>
     </property>
     <property name="toolTip">
      <string/>
@@ -352,7 +351,6 @@ QToolTip {
     <property name="font">
      <font>
       <pointsize>24</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -363,16 +361,16 @@ QToolTip {
      <string notr="true">background: white;</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
+     <enum>QFrame::Shadow::Sunken</enum>
     </property>
     <property name="text">
      <string>TextLabel</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QProgressBar" name="progress">
@@ -457,7 +455,7 @@ QTabBar::tab:!selected {
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="iconSize">
      <size>
@@ -481,7 +479,7 @@ QTabBar::tab:!selected {
        <rect>
         <x>160</x>
         <y>840</y>
-        <width>101</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
@@ -556,7 +554,7 @@ QCheckBox::indicator:checked:pressed {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -651,13 +649,13 @@ height: 20px;
        <bool>false</bool>
       </property>
       <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
+       <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
       </property>
       <property name="showDropIndicator" stdset="0">
        <bool>false</bool>
       </property>
       <property name="selectionMode">
-       <enum>QAbstractItemView::ExtendedSelection</enum>
+       <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
       </property>
       <property name="iconSize">
        <size>
@@ -666,22 +664,22 @@ height: 20px;
        </size>
       </property>
       <property name="verticalScrollMode">
-       <enum>QAbstractItemView::ScrollPerItem</enum>
+       <enum>QAbstractItemView::ScrollMode::ScrollPerItem</enum>
       </property>
       <property name="horizontalScrollMode">
-       <enum>QAbstractItemView::ScrollPerItem</enum>
+       <enum>QAbstractItemView::ScrollMode::ScrollPerItem</enum>
       </property>
       <property name="movement">
-       <enum>QListView::Static</enum>
+       <enum>QListView::Movement::Static</enum>
       </property>
       <property name="flow">
-       <enum>QListView::LeftToRight</enum>
+       <enum>QListView::Flow::LeftToRight</enum>
       </property>
       <property name="resizeMode">
-       <enum>QListView::Fixed</enum>
+       <enum>QListView::ResizeMode::Fixed</enum>
       </property>
       <property name="layoutMode">
-       <enum>QListView::Batched</enum>
+       <enum>QListView::LayoutMode::Batched</enum>
       </property>
       <property name="spacing">
        <number>0</number>
@@ -693,7 +691,7 @@ height: 20px;
        </size>
       </property>
       <property name="viewMode">
-       <enum>QListView::IconMode</enum>
+       <enum>QListView::ViewMode::IconMode</enum>
       </property>
       <property name="modelColumn">
        <number>0</number>
@@ -705,7 +703,7 @@ height: 20px;
        <bool>true</bool>
       </property>
       <property name="itemAlignment">
-       <set>Qt::AlignBaseline|Qt::AlignHCenter|Qt::AlignLeading|Qt::AlignLeft</set>
+       <set>Qt::AlignmentFlag::AlignBaseline|Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
       </property>
      </widget>
      <widget class="QPushButton" name="button_images_hide">
@@ -726,7 +724,7 @@ height: 20px;
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -808,7 +806,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -867,7 +865,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -926,7 +924,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1004,7 +1002,7 @@ Tip: searching in the full image path enables you to check/uncheck all the image
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1064,7 +1062,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1181,7 +1179,6 @@ QCheckBox::indicator:checked:pressed {
       <property name="font">
        <font>
         <pointsize>24</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -1192,7 +1189,7 @@ QCheckBox::indicator:checked:pressed {
        <string>No images to display</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
      <widget class="QPushButton" name="button_images_clear">
@@ -1213,7 +1210,7 @@ QCheckBox::indicator:checked:pressed {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1273,7 +1270,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1332,7 +1329,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1391,7 +1388,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1471,7 +1468,7 @@ Tip: try precise words first, then generic ones if needed</string>
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1532,7 +1529,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -1604,13 +1601,13 @@ QToolTip {
 }*/</string>
       </property>
       <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
+       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
       </property>
       <property name="autoScroll">
        <bool>false</bool>
       </property>
       <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
+       <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
       </property>
       <property name="showDropIndicator" stdset="0">
        <bool>false</bool>
@@ -1619,10 +1616,10 @@ QToolTip {
        <bool>false</bool>
       </property>
       <property name="selectionMode">
-       <enum>QAbstractItemView::NoSelection</enum>
+       <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
       </property>
       <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectItems</enum>
+       <enum>QAbstractItemView::SelectionBehavior::SelectItems</enum>
       </property>
       <property name="iconSize">
        <size>
@@ -1631,10 +1628,10 @@ QToolTip {
        </size>
       </property>
       <property name="verticalScrollMode">
-       <enum>QAbstractItemView::ScrollPerItem</enum>
+       <enum>QAbstractItemView::ScrollMode::ScrollPerItem</enum>
       </property>
       <property name="horizontalScrollMode">
-       <enum>QAbstractItemView::ScrollPerItem</enum>
+       <enum>QAbstractItemView::ScrollMode::ScrollPerItem</enum>
       </property>
       <property name="indentation">
        <number>10</number>
@@ -1796,7 +1793,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2102,7 +2099,7 @@ QSpinBox:disabled {
 }</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="keyboardTracking">
        <bool>false</bool>
@@ -2159,7 +2156,7 @@ QSpinBox:disabled {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2235,7 +2232,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2294,7 +2291,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2353,7 +2350,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2412,7 +2409,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2473,7 +2470,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2533,7 +2530,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2593,7 +2590,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2718,7 +2715,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -2834,7 +2831,6 @@ QCheckBox::indicator:checked:pressed {
       <property name="font">
        <font>
         <pointsize>24</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -2845,7 +2841,7 @@ QCheckBox::indicator:checked:pressed {
        <string>No duplicates to display</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
       <property name="indent">
        <number>0</number>
@@ -2869,7 +2865,7 @@ QCheckBox::indicator:checked:pressed {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -3000,7 +2996,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -3063,7 +3059,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -3123,7 +3119,7 @@ QToolTip {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="toolTip">
        <string/>
@@ -3176,14 +3172,14 @@ QToolTip {
         <x>290</x>
         <y>300</y>
         <width>1081</width>
-        <height>431</height>
+        <height>471</height>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::Shape::Panel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
+       <enum>QFrame::Shadow::Sunken</enum>
       </property>
       <widget class="QFrame" name="frame_combined_homography">
        <property name="geometry">
@@ -3203,10 +3199,10 @@ This algorithm is the best to find not-so -imilar images, but it is the slowest.
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_homography">
         <property name="geometry">
@@ -3219,8 +3215,7 @@ This algorithm is the best to find not-so -imilar images, but it is the slowest.
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -3230,7 +3225,7 @@ uses ORB features and descriptors to compute an homography.
 This algorithm is the best to find not-so -imilar images, but it is the slowest...</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -3325,10 +3320,10 @@ Very fast and pretty accurate, it is even efficient on 3° rotated images!</stri
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_blockmean">
         <property name="geometry">
@@ -3341,8 +3336,7 @@ Very fast and pretty accurate, it is even efficient on 3° rotated images!</stri
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -3352,7 +3346,7 @@ uses the means of the pixels on a tiny resized version of the image.
 Very fast and pretty accurate, it is even efficient on 3° rotated images!</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -3446,10 +3440,10 @@ uses ORB features and descriptors to compare images.</string>
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_features">
         <property name="geometry">
@@ -3462,8 +3456,7 @@ uses ORB features and descriptors to compare images.</string>
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -3472,7 +3465,7 @@ uses ORB features and descriptors to compare images.</string>
 uses ORB features and descriptors to compare images.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -3565,10 +3558,10 @@ based on image moments, results are binarized and hashed.</string>
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_radialvariance">
         <property name="geometry">
@@ -3581,8 +3574,7 @@ based on image moments, results are binarized and hashed.</string>
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -3591,7 +3583,7 @@ based on image moments, results are binarized and hashed.</string>
 based on image moments, results are binarized and hashed.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -3685,10 +3677,10 @@ images are matched using a fast approach: a very tiny version of the image is us
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_phash">
         <property name="geometry">
@@ -3701,8 +3693,7 @@ images are matched using a fast approach: a very tiny version of the image is us
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -3712,7 +3703,7 @@ images are matched using a fast approach: a very tiny version of the image is us
 8x8 pixels give us a 64-bit hash value that can be compared extremely quickly.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -3807,10 +3798,10 @@ images are matched using a fast approach: a very tiny version of the image is us
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_idhash">
         <property name="geometry">
@@ -3823,8 +3814,7 @@ images are matched using a fast approach: a very tiny version of the image is us
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -3834,7 +3824,7 @@ images are matched using a fast approach: a very tiny version of the image is us
 9x9 pixels using the difference between the columns give us a 64-bit hash value that can be compared extremely quickly.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -3915,7 +3905,7 @@ images are matched using a fast approach: a very tiny version of the image is us
        <property name="geometry">
         <rect>
          <x>760</x>
-         <y>230</y>
+         <y>180</y>
          <width>291</width>
          <height>51</height>
         </rect>
@@ -3928,10 +3918,10 @@ uses my own algorithm to categorize colors in an image using the OKLab color spa
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_dominantcolors">
         <property name="geometry">
@@ -3944,8 +3934,7 @@ uses my own algorithm to categorize colors in an image using the OKLab color spa
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -3954,7 +3943,7 @@ uses my own algorithm to categorize colors in an image using the OKLab color spa
 uses my own algorithm to categorize colors in an image using the OKLab color space. Colors are then quantized until only one remains, the dominant color of this image. Pairs of color are then compared using a color-distance function working with OKLab (the good old Euclidian distance)</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -4034,7 +4023,7 @@ uses my own algorithm to categorize colors in an image using the OKLab color spa
        <property name="geometry">
         <rect>
          <x>760</x>
-         <y>290</y>
+         <y>240</y>
          <width>291</width>
          <height>51</height>
         </rect>
@@ -4048,10 +4037,10 @@ This algorithm is SLOW on CPU but faster on a GPU. You may get many false-positi
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_classify">
         <property name="geometry">
@@ -4064,8 +4053,7 @@ This algorithm is SLOW on CPU but faster on a GPU. You may get many false-positi
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -4075,7 +4063,7 @@ uses the Inception 21K model to catogorize the images into 21K classes, when the
 This algorithm is SLOW on CPU but faster on a GPU. You may get many false-positives with a low threshold.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -4170,10 +4158,10 @@ images are matched using a fast approach: a very tiny version of the image is us
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_dhash">
         <property name="geometry">
@@ -4186,8 +4174,7 @@ images are matched using a fast approach: a very tiny version of the image is us
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -4197,7 +4184,7 @@ images are matched using a fast approach: a very tiny version of the image is us
 9x8 pixels using the difference between the columns give us a 64-bit hash value that can be compared extremely quickly.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -4291,10 +4278,10 @@ the Marr-Hildreth operator is applied to the image to find the edges, features a
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_marrhildreth">
         <property name="geometry">
@@ -4307,8 +4294,7 @@ the Marr-Hildreth operator is applied to the image to find the edges, features a
         </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
+          <pointsize>14</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -4317,7 +4303,7 @@ the Marr-Hildreth operator is applied to the image to find the edges, features a
 the Marr-Hildreth operator is applied to the image to find the edges, features are extracted and binarized.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -4411,10 +4397,10 @@ Collisions (and so false positives) can happen but are extremely unlikely to hap
         <string notr="true">background: lightgray;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QCheckBox" name="checkBox_combined_checksum">
         <property name="geometry">
@@ -4428,7 +4414,6 @@ Collisions (and so false positives) can happen but are extremely unlikely to hap
         <property name="font">
          <font>
           <pointsize>16</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -4438,7 +4423,7 @@ images are matched using their MD5 sum.
 Collisions (and so false positives) can happen but are extremely unlikely to happen, thanks to image sizes and orientation check.</string>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QCheckBox {
@@ -4515,6 +4500,127 @@ Collisions (and so false positives) can happen but are extremely unlikely to hap
         </property>
        </widget>
       </widget>
+      <widget class="QFrame" name="frame_combined_frequency">
+       <property name="geometry">
+        <rect>
+         <x>760</x>
+         <y>320</y>
+         <width>291</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="whatsThis">
+        <string>&quot;DNN Classify&quot; algorithm:
+uses the Inception 21K model to catogorize the images into 21K classes, when the same are used in an image they are considered as similar.
+This algorithm is SLOW on CPU but faster on a GPU. You may get many false-positives with a low threshold.</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background: lightgray;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QCheckBox" name="checkBox_combined_frequency">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>10</y>
+          <width>201</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="whatsThis">
+         <string>&quot;DNN Classify&quot; algorithm:
+uses the Inception 21K model to catogorize the images into 21K classes, when the same are used in an image they are considered as similar.
+This algorithm is SLOW on CPU but faster on a GPU. You may get many false-positives with a low threshold.</string>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QCheckBox {
+    spacing: 5px;
+	background: transparent;
+}
+
+QCheckBox::indicator {
+    width: 32px;
+    height: 32px;
+}
+
+QCheckBox::indicator:checked:disabled {
+    image: url(:/icons/checkbox-disabled.png);
+}
+
+QCheckBox::indicator:unchecked:disabled {
+    image: url(:/icons/checkbox-disabled.png);
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(:/icons/checkbox-unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(:/icons/checkbox-unchecked-hover.png);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    image: url(:/icons/checkbox-unchecked-pressed.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(:/icons/checkbox-checked.png);
+}
+
+QCheckBox::indicator:checked:hover {
+    image: url(:/icons/checkbox-checked-hover.png);
+}
+
+QCheckBox::indicator:checked:pressed {
+    image: url(:/icons/checkbox-checked-pressed.png);
+}</string>
+        </property>
+        <property name="text">
+         <string>Frequency</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_combined_frequency">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>10</y>
+          <width>31</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="whatsThis">
+         <string>&quot;DNN Classify&quot; algorithm:
+uses the Inception 21K model to catogorize the images into 21K classes, when the same are used in an image they are considered as similar.
+This algorithm is SLOW on CPU but faster on a GPU. You may get many false-positives with a low threshold.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="resources.qrc">:/icons/similarity-frequency.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
      </widget>
      <widget class="QFrame" name="frame_group_thumbnails_size">
       <property name="geometry">
@@ -4533,10 +4639,10 @@ This option is only available if the images list is empty.</string>
        <string notr="true">background: lightgray;</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_thumbnails_size">
        <property name="geometry">
@@ -4550,7 +4656,6 @@ This option is only available if the images list is empty.</string>
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -4639,7 +4744,7 @@ This option is only available if the images list is empty.</string>
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -4713,7 +4818,7 @@ This option is only available if the images list is empty.</string>
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -4787,7 +4892,7 @@ This option is only available if the images list is empty.</string>
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -4820,13 +4925,13 @@ QSpinBox:disabled {
 }</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
        <property name="readOnly">
         <bool>false</bool>
        </property>
        <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::UpDownArrows</enum>
+        <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
        </property>
        <property name="keyboardTracking">
         <bool>false</bool>
@@ -4865,10 +4970,10 @@ A greater internal working image size will slow down the images matching process
        <string notr="true">background: lightgray;</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_reduced_size">
        <property name="geometry">
@@ -4882,7 +4987,6 @@ A greater internal working image size will slow down the images matching process
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -4971,7 +5075,7 @@ A greater internal working image size will slow down the images matching process
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -5045,7 +5149,7 @@ A greater internal working image size will slow down the images matching process
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -5119,7 +5223,7 @@ A greater internal working image size will slow down the images matching process
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -5152,13 +5256,13 @@ QSpinBox:disabled {
 }</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
        <property name="readOnly">
         <bool>false</bool>
        </property>
        <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::UpDownArrows</enum>
+        <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
        </property>
        <property name="keyboardTracking">
         <bool>false</bool>
@@ -5197,10 +5301,10 @@ An internal image working size of 256 and 150 features are a good balance betwee
        <string notr="true">background: lightgray;</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <widget class="QLabel" name="label_nb_features">
        <property name="geometry">
@@ -5214,7 +5318,6 @@ An internal image working size of 256 and 150 features are a good balance betwee
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -5303,7 +5406,7 @@ An internal image working size of 256 and 150 features are a good balance betwee
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -5377,7 +5480,7 @@ An internal image working size of 256 and 150 features are a good balance betwee
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -5451,7 +5554,7 @@ An internal image working size of 256 and 150 features are a good balance betwee
           </colorrole>
           <colorrole role="PlaceholderText">
            <brush brushstyle="SolidPattern">
-            <color alpha="255">
+            <color alpha="128">
              <red>0</red>
              <green>0</green>
              <blue>0</blue>
@@ -5484,13 +5587,13 @@ QSpinBox:disabled {
 }</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
        <property name="readOnly">
         <bool>false</bool>
        </property>
        <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::UpDownArrows</enum>
+        <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
        </property>
        <property name="keyboardTracking">
         <bool>false</bool>
@@ -5524,10 +5627,10 @@ QSpinBox:disabled {
      <string notr="true">background: lightgray;</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::Shape::StyledPanel</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
+     <enum>QFrame::Shadow::Sunken</enum>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="doubleSpinBox_rate">
@@ -5787,13 +5890,13 @@ QSpinBox:disabled {
 }</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
     </property>
     <property name="readOnly">
      <bool>false</bool>
     </property>
     <property name="buttonSymbols">
-     <enum>QAbstractSpinBox::NoButtons</enum>
+     <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
     </property>
     <property name="keyboardTracking">
      <bool>false</bool>
@@ -5817,6 +5920,59 @@ QSpinBox:disabled {
      <double>0.000000000000000</double>
     </property>
    </widget>
+   <widget class="QLabel" name="label_algorithm">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>970</y>
+      <width>281</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: white;
+padding: 5px;</string>
+    </property>
+    <property name="text">
+     <string>Algorithm description</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_algorithm_arrow">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>930</y>
+      <width>41</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/icons/arrow-up.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>frame</zorder>
    <zorder>button_quit</zorder>
    <zorder>frame_about</zorder>
@@ -5826,6 +5982,8 @@ QSpinBox:disabled {
    <zorder>progress</zorder>
    <zorder>tabWidget</zorder>
    <zorder>doubleSpinBox_rate</zorder>
+   <zorder>label_algorithm</zorder>
+   <zorder>label_algorithm_arrow</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

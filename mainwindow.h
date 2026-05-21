@@ -4,15 +4,16 @@
 #
 #       by AbsurdePhoton - www.absurdephoton.fr
 #
-#                   v1 - 2022/12/25
+#                   v1.2 - 2025/08/24
 #
-#-------------------------------------------------*/
+#---------------------------------------------------*/
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include "opencv2/opencv.hpp"
 #include "opencv2/core/ocl.hpp"
+#include <opencv2/dnn.hpp>
 
 #include <QMainWindow>
 #include <QMessageBox>
@@ -29,7 +30,7 @@
 #include <thread>
 #include <omp.h>
 
-#include "widgets/file-dialog.h"
+#include "dialogs/file-dialog.h"
 #include "lib/image-compare.h"
 #include "lib/image-utils.h"
 #include "lib/image-transform.h"
@@ -104,6 +105,7 @@ private slots:
     //// GUI
     void on_button_quit_clicked(); // quit GUI
     void on_button_whats_this_clicked(); // What's this function
+    void on_tabWidget_currentChanged(int); // tab changed ?
     void on_comboBox_algo_currentIndexChanged(int algo); // change algorithm -> set value to threshold
     void on_comboBox_level_currentIndexChanged(int level); // set value to threshold doubleSpinBox when level has changed
     void SetCombinedActivated(const imageSimilarityAlgorithm &algorithm, const bool &activated); // activate an algorithm for combined score in options tab
@@ -248,7 +250,7 @@ private:
     // categories : 0 < dissimilar < different < similar < ∞ (exact)
 
     // DNN
-    cv::dnn::Net dnn; // DNN is only defined (and loaded) once
+    cv::dnn::Net dnnInception; // DNN is only defined (and loaded) once
     std::vector<std::string> classes; // classes are only defined (and loaded) once
 
     // options

@@ -30,19 +30,20 @@ SOURCES +=  main.cpp\
             #lib/csv-file.cpp \
             lib/string-utils.cpp \
             lib/contours.cpp \
-            #lib/image-effects.cpp \
+            lib/image-effects.cpp \
             lib/image-transform.cpp \
             lib/image-color.cpp \
             lib/image-compare.cpp \
-            #lib/image-filter.cpp \
-            #lib/image-draw.cpp \
+            lib/image-filter.cpp \
+            lib/image-draw.cpp \
             #lib/image-lut.cpp \
+            lib/superpixels.cpp \
             #lib/EDLine/EDColor.cpp \
             #lib/EDLine/ED.cpp \
-            #lib/polypartition/polypartition.cpp \
+            lib/polypartition/polypartition.cpp \
             #widgets/image-viewer.cpp \
             #widgets/dial-range.cpp \
-            widgets/file-dialog.cpp
+            dialogs/file-dialog.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -54,20 +55,21 @@ HEADERS  += mainwindow.h \
             #lib/csv-file.h \
             lib/string-utils.h \
             lib/contours.h \
-            #lib/image-effects.h \
+            lib/image-effects.h \
             lib/image-transform.h \
             lib/image-color.h \
             lib/image-compare.h \
-            #lib/image-filter.h \
-            #lib/image-draw.h \
+            lib/image-filter.h \
+            lib/image-draw.h \
             #lib/image-lut.h \
+            lib/superpixels.h \
             lib/randomizer.h \
             #lib/EDLine/EDColor.h \
             #lib/EDLine/ED.h \
-            #lib/polypartition/polypartition.h \
+            lib/polypartition/polypartition.h \
             #widgets/image-viewer.h \
             #widgets/dial-range.h \
-            widgets/file-dialog.h
+            dialogs/file-dialog.h
 
 
 FORMS    += mainwindow.ui
