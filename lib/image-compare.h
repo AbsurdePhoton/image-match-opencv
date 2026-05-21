@@ -4,13 +4,14 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1.0 - 2022/12/12
+#                v1.2 - 2026/05/19
 #
 #   - OpenCV's and custom hashes algorithms
 #   - Image features and homography
 #   - Compare image palettes
 #   - Image quality
 #   - Image comparison with DNN
+#   - Frequency map comparison
 #
 #   uses OpenCV Contrib (features and DNN support)
 #
@@ -41,8 +42,28 @@ enum imageSimilarityAlgorithm   {img_similarity_checksum,
                                  img_similarity_dominant_colors, // special algorithm - do not use image hash functions for these ones, use direct functions instead !
                                  img_similarity_features, img_similarity_homography, // special algorithm - do not use image hash functions for these ones, use direct functions instead !
                                  img_similarity_dnn_classify, // special algorithm - do not use image hash functions for these ones, use direct functions instead !
+                                 img_similarity_frequency, // using frequencies and FFT
                                  img_similarity_count // always leave this one here
                    }; // image hash types
+
+static const std::string imageSimilarityDescription[img_similarity_count + 1] = {
+    "Checksum: simple checksum (MD5) of pixel values - very sensitive to small changes",
+    "Average hash: compares average brightness per block - fast and simple",
+    "Perceptual hash: uses DCT to capture low-frequency content - more robust than aHash",
+    "Difference hash: encodes gradients (brightness differences) between adjacent pixels",
+    "Image difference hash: similar to dHash but slightly different computation",
+    "Visual Hash: computes a hash based on low-level visual features like keypoint descriptors, local gradients, and color/texture cues",
+    "Block Mean: computes hash from block-wise mean pixel values - captures coarse structure",
+    "Color Moments: uses color moments (mean, variance, skew) to describe color distribution",
+    "Marr Hildreth: edge-based hash using Marr-Hildreth operator (Laplacian of Gaussian)",
+    "Radial Variance: hash based on radial variance of edges - robust to rotation/scale",
+    "Dominant colors: computes the first 8 dominant colors of images with Eigen vectors in OKLAB color space, then compares their euclidian distance",
+    "Features: uses ORB + HARRIS features detection to find keypoints",
+    "Homography: geometric similarity using homography, based on features - robust to rotation/scale",
+    "DNN classify: semantically analyses the image with the Inception 21K DNN model (recognizes up to 21K objects), then compares the categories and scores",
+    "Frequency: based on patch-wise image domain frequency content - first produces a local-frequency feature map, then hashes it",
+    "Combine several or all algorithms to compute a final score - set values in the Options tab before launching the comparison"
+};
 
 
 //// Image Hashes

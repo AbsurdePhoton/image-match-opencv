@@ -4,17 +4,19 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                v1.0 - 2022/12/12
+#                v1.2 - 2026/05/19
 #
 #   - OpenCV's and custom hashes algorithms
 #   - Image features and homography
 #   - Compare image palettes
 #   - Image quality
 #   - Image comparison with DNN
+#   - Frequency map comparison
 #
 #   uses OpenCV Contrib (features and DNN support)
 #
 #-------------------------------------------------*/
+
 
 #include "image-compare.h"
 
@@ -171,6 +173,79 @@ cv::Mat ColorMomentsHash(const cv::Mat &source) // reimplementation of OpenCV's 
     return result;
 }
 
+cv::Mat PatchFrequencyHash(const cv::Mat & input) // hash from frequencies, computed by patches over the image
+    // 8-byte patch frequency hash (64 bits)
+{
+    int patchSize = std::min(input.cols, input.rows) / 32;
+    if (patchSize < 3)
+        patchSize = 3;
+
+    cv::Mat gray;
+    if (input.channels() == 3) cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
+    else gray = input.clone();
+    gray.convertTo(gray, CV_32F);
+
+    // Compute optimal FFT sizes for speed and full patches
+    int optimalRows = cv::getOptimalDFTSize(gray.rows);
+    int optimalCols = cv::getOptimalDFTSize(gray.cols);
+
+    // Compute padding to reach optimal sizes and multiples of patchSize
+    int padRows = ((optimalRows - gray.rows + patchSize - 1) / patchSize) * patchSize;
+    int padCols = ((optimalCols - gray.cols + patchSize - 1) / patchSize) * patchSize;
+
+    cv::Mat padded;
+    cv::copyMakeBorder(gray, padded, 0, padRows, 0, padCols, cv::BORDER_REPLICATE);
+
+    int nRows = padded.rows / patchSize;
+    int nCols = padded.cols / patchSize;
+
+    cv::Mat heatmap = cv::Mat::zeros(nRows, nCols, CV_32F);
+
+    // Compute FFT magnitude for each patch
+    for (int i = 0; i < nRows; i++) {
+        for (int j = 0; j < nCols; j++) {
+            cv::Rect roi(j*patchSize, i*patchSize, patchSize, patchSize);
+            cv::Mat patch = padded(roi);
+
+            cv::Mat planes[] = {patch.clone(), cv::Mat::zeros(patch.size(), CV_32F)};
+            cv::Mat complexI;
+            cv::merge(planes, 2, complexI);
+            cv::dft(complexI, complexI);
+            cv::split(complexI, planes);
+            cv::magnitude(planes[0], planes[1], planes[0]);
+
+            heatmap.at<float>(i,j) = static_cast<float>(cv::mean(planes[0])[0]);
+        }
+    }
+
+    // Resize heatmap to 8x8
+    cv::Mat resizedHeatmap;
+    cv::resize(heatmap, resizedHeatmap, cv::Size(8,8), 0, 0, cv::INTER_LINEAR);
+
+    // Flatten and threshold by median to create 64-bit Hamming hash
+    std::vector<float> flat(64);
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            flat[i*8 + j] = resizedHeatmap.at<float>(i,j);
+
+    std::vector<float> sorted = flat;
+    std::nth_element(sorted.begin(), sorted.begin()+32, sorted.end());
+    float median = sorted[32];
+
+    cv::Mat hash = cv::Mat::zeros(1, 8, CV_8U);
+    for (int byteIdx = 0; byteIdx < 8; byteIdx++) {
+        uchar b = 0;
+        for (int bit = 0; bit < 8; bit++) {
+            int idx = byteIdx*8 + bit;
+            if (flat[idx] >= median)
+                b |= (1 << (7-bit));
+        }
+        hash.at<uchar>(0, byteIdx) = b;
+    }
+
+    return hash;
+}
+
 cv::Mat ImageHash(const cv::Mat &source, const imageSimilarityAlgorithm &similarityAlgorithm) // return image hash as cv::Mat
     // not working for features and homography and DNN and dominant colors !
 {
@@ -186,13 +261,19 @@ cv::Mat ImageHash(const cv::Mat &source, const imageSimilarityAlgorithm &similar
             break;
         }
         case img_similarity_aHash: {
-            cv::Ptr<cv::img_hash::AverageHash> h = cv::img_hash::AverageHash::create();
-            h->compute(source, hash);
+            #pragma omp critical
+            {
+                cv::Ptr<cv::img_hash::AverageHash> h = cv::img_hash::AverageHash::create();
+                h->compute(source, hash);
+            }
             break;
         }
         case img_similarity_pHash: {
-            cv::Ptr<cv::img_hash::PHash> h = cv::img_hash::PHash::create();
-            h->compute(source, hash);
+            #pragma omp critical
+            {
+                cv::Ptr<cv::img_hash::PHash> h = cv::img_hash::PHash::create();
+                h->compute(source, hash);
+            }
             break;
         }
         case img_similarity_dHash: {
@@ -208,8 +289,11 @@ cv::Mat ImageHash(const cv::Mat &source, const imageSimilarityAlgorithm &similar
             break;
         }
         case img_similarity_block_mean: {
-            cv::Ptr<cv::img_hash::BlockMeanHash> h = cv::img_hash::BlockMeanHash::create();
-            h->compute(source, hash);
+            #pragma omp critical
+            {
+                cv::Ptr<cv::img_hash::BlockMeanHash> h = cv::img_hash::BlockMeanHash::create();
+                h->compute(source, hash);
+            }
             break;
         }
         case img_similarity_color_moments: {
@@ -217,13 +301,23 @@ cv::Mat ImageHash(const cv::Mat &source, const imageSimilarityAlgorithm &similar
             break;
         }
         case img_similarity_marr_hildreth: {
-            cv::Ptr<cv::img_hash::MarrHildrethHash> h = cv::img_hash::MarrHildrethHash::create();
-            h->compute(source, hash);
+            #pragma omp critical
+            {
+                cv::Ptr<cv::img_hash::MarrHildrethHash> h = cv::img_hash::MarrHildrethHash::create();
+                h->compute(source, hash);
+            }
             break;
         }
         case img_similarity_radial_variance: {
-            cv::Ptr<cv::img_hash::RadialVarianceHash> h = cv::img_hash::RadialVarianceHash::create();
-            h->compute(source, hash);
+            #pragma omp critical
+            {
+                cv::Ptr<cv::img_hash::RadialVarianceHash> h = cv::img_hash::RadialVarianceHash::create();
+                h->compute(source, hash);
+            }
+            break;
+        }
+        case img_similarity_frequency: {
+            hash = PatchFrequencyHash(source);
             break;
         }
     }
@@ -288,6 +382,10 @@ float ImageHashCompare(const cv::Mat &val1, const cv::Mat &val2, const imageSimi
         case img_similarity_radial_variance: { // 40 uchar = 320 bits
             cv::Ptr<cv::img_hash::RadialVarianceHash> h = cv::img_hash::RadialVarianceHash::create();
             dif = h->compare(val1, val2) * 100.0f;
+            break;
+        }
+        case img_similarity_frequency: { // 8 uchar = 64 bits
+            dif = (64.0f - cv::norm(val1, val2, cv::NORM_HAMMING)) / 0.64f;
             break;
         }
     }
@@ -555,7 +653,7 @@ cv::Mat GetHomographyFromImagesFeatures(const cv::Mat &im1, const cv::Mat &im2,
     }
 
     // compute homography using RHO algorithm
-    cv::Mat mask;
+    //cv::Mat mask;
     cv::Mat H = cv::findHomography(goodPoints1, goodPoints2, cv::RHO);
 
     // compute score
@@ -577,7 +675,7 @@ cv::Mat GetHomographyFromImagesFeatures(const cv::Mat &im1, const cv::Mat &im2,
         cv::perspectiveTransform(im1_corners, im1_corners_transformed, H);
         // compute area from intersection of image 2 corners and transformed image 1 corners
         int area;
-        cv::Mat intersection = SimpleContoursIntersectionToMask2f(im2_corners, im1_corners_transformed, area);
+        cv::Mat intersection = SimpleContoursIntersectionToMask2f(im2_corners, im1_corners_transformed, area); // DO NOT COMMENT : intersection itself is not used, but it computes area
         score = float(area) / float(im2.cols * im2.rows); // percentage of "covered" image 2 by "homography-transformed" image 1
         if (score > 1.0f) // transformed image 1 can be bigger than image 2
             score = 1.0f;
