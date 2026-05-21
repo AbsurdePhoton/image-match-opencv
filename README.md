@@ -1,6 +1,6 @@
 # image-match-opencv
 ## A nice GUI using Qt and OpenCV to perform images similarity matching from entire folders - several CUSTOM ALGORITHMS - optimized to be incredibly EFFICIENT and FAST
-### v1 - 2022-12-25
+### v1.2 - 2025-08-24
 
 ![Screenshot - Global](screenshots/match.jpg?raw=true)
 <br/>
@@ -8,6 +8,7 @@
 
 ## HISTORY
 
+* v1.2: finally found out why the compare function crashed: OpenCV's image hash functions don't like being called concurrently, had to add "pauses" at the right places to circumvent
 * v1: use of the 21K+ classes found by DNN classification which allow to search/check images by content - added "move files" button on images list
 * v0: launch - already full of useful functions
 <br/>
@@ -36,16 +37,18 @@
 ## WITH WHAT?
 
 Developed using:
-* Linux Ubuntu	22.04
-* QT Creator 6.0.2
+* Linux Ubuntu	22.04 (now 24.04)
+* QT Creator 6.0.2 (now 19.0.2)
 * Requires these libraries:
     * QT 6 (with extra image files formats if you can)
-    * openCV 4.6 compiled with openCV-contribs - may work with any 4.x version
+    * openCV 4.6+ compiled with openCV-contribs - may work with any 4.x version
 * A c++ compiler which supports c++17
 
 This software should also work under Microsoft Windows, with adjustments: if you compiled it successfully please contact me, I'd like to offer compiled Windows executables too!
 
 You will also have to download a DNN model (~128MB) in order to use the DNN classification functions (see the /models folder for instructions) ... or you can use another classification model with not many changes in the code.
+
+[EDIT 2026/05/19] No more crashes!
 
 [EDIT 2024/06/27] OpenMP is back! There could be a bug in OpenCV v4.8, or maybe there's a memory leak somewhere in my code... I'll investigate further, but know that all works at full speed with OpenCV 4.9+, only with an occasional crash :)
 
@@ -115,7 +118,7 @@ The Duplicates tab displays image matches. But how were they regrouped?
 * First pass: all the images are tested with each other. This means the more images you have in the images tab, the more operation there will be, because the number of matches will be N.(N-1) / 2 - for example if you have 15000 images to test, there will be 105 million tests to perform!
 * After the 1st pass, all image pairs have a score. Each image has a list of its similar images
 * Second pass: look for each image's closest neighbour. If this neighbour also has a closest neighbour, compare the scores and decide which image goes with which one. No image can be added to a group if its score with all images in this group isn't over the threshold
-* Last pass: identify the leftovers (some images were not regrouped) and decide to which group they should be attached. Constraint are less restrictive
+* Last pass: identify the leftovers (some images were not regrouped) and decide to which group they should be attached. Constraints are less restrictive
 
 ### IMAGE SIMILARITY ALGORITHMS
 
@@ -128,12 +131,12 @@ The Duplicates tab displays image matches. But how were they regrouped?
    * Block Mean Hash: grayscale means are used
    * Marr-Hildreth Hash: this operator is used then binarized
    * Radial Variance Hash: this one can detect rotations to some extent
-   * Color moments: this one gives too much false positives, this is why I thought about using dominant colors, more about this in a moment...
+   * Color moments: this one gives too much false positives, this is why I thought about using dominant colors, more about this below
 * I added myself these ones:
    * dHash (Difference Hash): a tiny 9x8 pixels version of the image is used and pixels are compared with luminosity changes
    * idHash (Important Difference Hash): same principle as dHash, but horizontal AND vertical scans are performed on a 9x9 pixels tiny version of the original image - incredibly accurate even with max 3° rotated images 
    * Dominant Colors: the dominant colors of each image (it is NOT a mean) are computed, then these values are compared using their distance in the OKLAB color space - this way images are regrouped by "global" colors - not very accurate but very useful for the special similarity mode "Combined" - notice that the dominant colors algorithm is of my own design, called "Sectored-Means"
-   * DNN Classify: some AI is used here, and you better have a NVidia GPU, although computing with CPU is supported (much slower). Images are classified using a 21K classes reference, and then are compared using the most used percentages of the matched classes - not very accurate but useful for the special similarity mode "Combined" - you'll have to download a big 128MB Caffe model file (with a BitTorrent client) to be able to use it - see the /model folder for instrcutions. If you want to use another image classification model, not many changes are needed in the code, if your model delivers a list of classes with floating point percentages
+   * DNN Classify: some AI is used here, and you better have a NVidia GPU, although computing with CPU is supported (much slower). Images are classified using a 21K classes reference, and then are compared using the most used percentages of the matched classes - not very accurate but useful for the special similarity mode "Combined" - you'll have to download a big 128MB Caffe model file (with a BitTorrent client) to be able to use it - see the /model folder for instructions. If you want to use another image classification model, not many changes are needed in the code, if your model delivers a list of classes with floating point percentages
    * Features: images features are matched between the pairs, the more they have in common the more the score will be. This method is able to detect extremely rotated versions of an image - this is very SLOW and you should use it on reduced images lists (2K-3K max)
    * Homothety: a step further from "Features", if a sufficient number of "good" matches are found, an homothety could be found - this usually means images are similar. This method can detect not-so-near duplicates, and extremely rotated versions - this is very efficient but also very SLOW, and you should use it on reduced images lists (2K-3K max)
 * this tool is not perfect:
@@ -141,6 +144,7 @@ The Duplicates tab displays image matches. But how were they regrouped?
    * extreme low threshold values will surely produce many false-positives 
 * Also notice:
    * a lot of results are cached when an algorithm is used: you can recompute the same algorithm with a different threshold in a very reduced time compared to the first pass!
+   * the threshold can be adjusted manually instead of using the list, just type in the percentage
    * with 48GB of RAM, you can test about 25K images, but it is not a good idea to do that in a unique pass (long wait). Prefer sub-groups!
 
 ### SPECIAL "COMBINED" SIMILARITY ALGORITHM
