@@ -4,7 +4,7 @@
 #
 #    by AbsurdePhoton - www.absurdephoton.fr
 #
-#                   v1 - 2022/12/25
+#                   v1.2 - 2025/08/24
 #
 #-------------------------------------------------
 
@@ -15,9 +15,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = image-match
 TEMPLATE = app
 
-#INCLUDEPATH += /usr/local/include/opencv4/opencv2
-#INCLUDEPATH += /usr/include/eigen3
-
 LIBS += -fopenmp -ltbb -ffast-math -fno-math-errno
 
 SOURCES +=  main.cpp\
@@ -27,7 +24,6 @@ SOURCES +=  main.cpp\
             lib/color-spaces.cpp \
             lib/angles.cpp \
             lib/config-file.cpp \
-            #lib/csv-file.cpp \
             lib/string-utils.cpp \
             lib/contours.cpp \
             lib/image-effects.cpp \
@@ -36,13 +32,8 @@ SOURCES +=  main.cpp\
             lib/image-compare.cpp \
             lib/image-filter.cpp \
             lib/image-draw.cpp \
-            #lib/image-lut.cpp \
             lib/superpixels.cpp \
-            #lib/EDLine/EDColor.cpp \
-            #lib/EDLine/ED.cpp \
             lib/polypartition/polypartition.cpp \
-            #widgets/image-viewer.cpp \
-            #widgets/dial-range.cpp \
             dialogs/file-dialog.cpp
 
 
@@ -52,7 +43,6 @@ HEADERS  += mainwindow.h \
             lib/color-spaces.h \
             lib/angles.h \
             lib/config-file.h \
-            #lib/csv-file.h \
             lib/string-utils.h \
             lib/contours.h \
             lib/image-effects.h \
@@ -61,14 +51,9 @@ HEADERS  += mainwindow.h \
             lib/image-compare.h \
             lib/image-filter.h \
             lib/image-draw.h \
-            #lib/image-lut.h \
             lib/superpixels.h \
             lib/randomizer.h \
-            #lib/EDLine/EDColor.h \
-            #lib/EDLine/ED.h \
             lib/polypartition/polypartition.h \
-            #widgets/image-viewer.h \
-            #widgets/dial-range.h \
             dialogs/file-dialog.h
 
 
